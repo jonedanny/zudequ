@@ -1,0 +1,45 @@
+<div class="table-operations">
+        <nz-input-group>
+            <div nz-col nzSpan="4">
+                <input type="text" nz-input [(ngModel)]="fillterData.username" placeholder="请输入用户名" />
+            </div>
+            <div nz-col nzSpan="10">
+                <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+                &nbsp;
+                <button nz-button><i nz-icon nzType="plus"></i>添加管理员</button>
+            </div>
+        </nz-input-group>
+    </div>
+    <nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+        [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+        (nzPageIndexChange)="searchData()">
+        <thead>
+            <tr>
+                <th nzWidth="100px" nzAlign="left">ID</th>
+                <th nzWidth="200px" nzAlign="left">用户名</th>
+                <th nzWidth="100px" nzAlign="left">姓名</th>
+                <th nzWidth="100px" nzAlign="left">权限</th>
+                <th nzWidth="200px" nzAlign="left">创建时间</th>
+                <th nzWidth="250px" nzAlign="left" nzRight="0px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of result">
+                <td>{{item.id}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.name}}</td>
+                <td [ngClass]="{'c_red': item.author === '3','c_orange':item.author === '2','c_green':item.author === '1','c_grey':item.author === '0'}">
+                    {{changeAuthorText(item.author)}}
+                </td>
+                <td>{{item.creat_time}}</td>
+                <td nzRight="0px">
+                    <a>重置密码</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a>修改权限</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a nzType="danger"><i nz-icon nzType="delete"></i>删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

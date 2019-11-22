@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<style>
+		table {
+			width: 100%;
+			border: 1px solid #666;
+			border-collapse: collapse;
+		}
+
+		td {
+			padding: 5px;
+			border: 1px solid #666;
+		}
+	</style>
+</head>
+<body></body>
+<script>
+	var data = JSON.parse(sessionStorage.getItem("print_content"));
+	console.log(data)
+	var delHtml = "";
+	var table = "<table>\
+		<tr><td align='right' width='40%'>维修ID: </td><td width='60%'>"+ data.id + "</td></tr>\
+		<tr><td align='right'>序列号: </td><td>"+ data.uid + "</td></tr>\
+		<tr><td align='right'>淘宝ID: </td><td>"+ data.taobao_id + "</td></tr>\
+		<tr><td align='right'>物流单号: </td><td>"+ data.order_id + "</td></tr>\
+		<tr><td align='right'>维修原因: </td><td>"+ data.reason + "</td></tr>\
+		<tr><td align='right'>保修: </td><td>"+ data.time + "</td></tr>\
+		<tr><td align='right'>状态: </td><td>"+ data.state + "</td></tr>\
+		<tr><td align='right'>交付时间: </td><td>"+ data.finishRepair + "</td></tr>\
+		<tr><td align='right'>物品清单: </td><td>"+ data.repairList + "</td></tr>\
+		<tr><td align='right'>维修金额: </td><td>"+ data.money + "</td></tr>\
+		<tr><td align='right'>异常: </td><td>"+ data.error + "</td></tr>\
+		<tr><td align='right'>备注: </td><td>"+ data.des + "</td></tr>\
+		<tr><td align='right'>联系方式: </td><td>"+ data.phone + "</td></tr>\
+	</table>";
+	document.write(table);
+	window.print();
+</script>
+
+</html>

@@ -1,0 +1,81 @@
+<button nz-button nzType="primary" (click)="modalDisplay = true">添加顶级分类</button>
+<nz-divider></nz-divider>
+<nz-spin [nzSpinning]="isSpinning">
+    <nz-tree *ngIf="classifyOutputData.length > 0" [nzData]="classifyOutputData" nzShowLine
+        (nzDblClick)="nzEvent($event)">
+    </nz-tree>
+</nz-spin>
+<nz-drawer [nzVisible]="visible" [nzWidth]="500" [nzClosable]="false" (nzOnClose)="close()">
+    <p>
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+            <input type="text" nz-input [(ngModel)]="classifyEditData.name" />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+            <button nz-button nzType="primary" nzSearch (click)="modifyName()"><i nz-icon nzType="save"></i></button>
+        </ng-template>
+    </p>
+    <nz-descriptions [nzColumn]="2" nzTitle="分类信息">
+        <nz-descriptions-item nzTitle="分类ID" [nzSpan]="1">{{classifyEditData.id}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="所属部门" [nzSpan]="1">{{classifyEditData.department}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="一级分类ID" [nzSpan]="1">{{classifyEditData.classify_a_id}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="二级分类ID" [nzSpan]="1">{{classifyEditData.classify_b_id}}</nz-descriptions-item>
+    </nz-descriptions>
+    <button nz-button [nzLoading]="isSpinning" nzType="danger" (click)="deleteClassify()">
+        删除该分类
+    </button>
+    <nz-divider></nz-divider>
+    <div nz-row>
+        <div nz-col>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">分类设备价格: </nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.price" name="price" class="100p"></nz-input-number> 元
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">分类设备租金: </nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.outerPrice" name="outerPrice" class="100p"></nz-input-number> 元
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">分类设备备注: </nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <input nz-input [(ngModel)]="deviceSellInfo.des" name="des" class="100p" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
+    </div>
+    <nz-divider *ngIf="hasAddSub"></nz-divider>
+    <div nz-row *ngIf="hasAddSub">
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label>添加子分类</nz-form-label>
+                <nz-form-control>
+                    <input nz-input [(ngModel)]="subClassifuName" placeholder="请输入该分类下的子分类名称" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="addSubClassify()"><span>添加</span></button>
+    </div>
+</nz-drawer>
+<nz-modal [(nzVisible)]="modalDisplay" nzTitle="添加顶级分类" (nzOnCancel)="modalDisplay = false" (nzOnOk)="addTopClassify()" [nzOkLoading]="isSpinning">
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">部门</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select [(ngModel)]="modalData.id" nzAllowClear nzPlaceHolder="请选择部门" name="department">
+                    <nz-option *ngFor="let item of department" nzValue="{{item.id}}" nzLabel="{{item.name}}">
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">分类名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input placeholder="请输入分类名称" [(ngModel)]="modalData.name" name="classifyName" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>

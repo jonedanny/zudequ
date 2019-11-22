@@ -1,0 +1,130 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.taobao_id" placeholder="淘宝ID" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.order_id" placeholder="物流单号" />
+        </div>
+        <div nz-col nzSpan="2">
+            <nz-select nzAllowClear nzPlaceHolder="状态" [(ngModel)]="fillterData.state" class="w100p">
+                <nz-option nzValue="" nzLabel="全部"></nz-option>
+                <nz-option nzValue="已收到包裹" nzLabel="已收到包裹"></nz-option>
+                <nz-option nzValue="准备处理" nzLabel="准备处理"></nz-option>
+                <nz-option nzValue="正在处理中" nzLabel="正在处理中"></nz-option>
+                <nz-option nzValue="异常状态" nzLabel="异常状态"></nz-option>
+                <nz-option nzValue="处理完成" nzLabel="处理完成"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="2">
+            <nz-select nzAllowClear nzPlaceHolder="结果" [(ngModel)]="fillterData.isFinished"  class="w100p">
+                <nz-option nzValue="0" nzLabel="未完成"></nz-option>
+                <nz-option nzValue="1" nzLabel="已完成"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="3">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzLeft="0px">ID</th>
+            <th nzWidth="150px">维修人</th>
+            <th nzWidth="200px">序列号</th>
+            <th nzWidth="200px">淘宝ID</th>
+            <th nzWidth="200px">物流单号</th>
+            <th nzWidth="300px">维修原因</th>
+            <th nzWidth="100px">保修</th>
+            <th nzWidth="200px">状态</th>
+            <th nzWidth="200px">交付时间</th>
+            <th nzWidth="500px">物品清单</th>
+            <th nzWidth="200px">维修金额</th>
+            <th nzWidth="300px">异常</th>
+            <th nzWidth="300px">备注</th>
+            <th nzWidth="200px">联系方式</th>
+            <th nzWidth="200px">创建时间</th>
+            <th nzWidth="200px" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td nzLeft="0px">{{item.id}}</td>
+            <td>{{common.adminListTranslate(item.maintenance_man)}}</td>
+            <td>{{item.uid}}</td>
+            <td>{{item.taobao_id}}</td>
+            <td>{{item.order_id}}</td>
+            <td>{{item.reason}}</td>
+            <td>{{item.time}}</td>
+            <td>{{item.state}}</td>
+            <td>{{item.finishRepair}}</td>
+            <td>{{item.repairList}}</td>
+            <td>{{item.money}}</td>
+            <td>{{item.error}}</td>
+            <td>{{item.des}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.creat_time}}</td>
+            <td nzRight="0px">
+                <a (click)="print(item)">打印</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="completeRepairWarning(item)">完成</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="edit(item)">编辑</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="visible"
+    nzPlacement="left"
+    [nzWidth]="600"
+    nzTitle="维修信息编辑"
+    (nzOnClose)="visible = false"
+>
+    <nz-descriptions [nzColumn]="2" *ngIf="selectData !== null">
+        <nz-descriptions-item nzTitle="序列号码" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.uid" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="淘宝 id" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.taobao_id" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="物流单号" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.order_id" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修状态" [nzSpan]="1">
+            <nz-select class="w160" nzAllowClear nzPlaceHolder="请选择维修状态" [(ngModel)]="selectData.state" nzSize="small">
+                <nz-option nzValue="已收到包裹" nzLabel="已收到包裹"></nz-option>
+                <nz-option nzValue="准备处理" nzLabel="准备处理"></nz-option>
+                <nz-option nzValue="正在处理中" nzLabel="正在处理中"></nz-option>
+                <nz-option nzValue="异常状态" nzLabel="异常状态"></nz-option>
+                <nz-option nzValue="处理完成" nzLabel="处理完成"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="保修时间" [nzSpan]="1">
+            <nz-select class="w160" nzAllowClear nzPlaceHolder="请选择保修时间" [(ngModel)]="selectData.time" nzSize="small">
+                <nz-option nzValue="无" nzLabel="无"></nz-option>
+                <nz-option nzValue="半个月" nzLabel="半个月"></nz-option>
+                <nz-option nzValue="1个月" nzLabel="1个月"></nz-option>
+                <nz-option nzValue="3个月" nzLabel="3个月"></nz-option>
+                <nz-option nzValue="半年" nzLabel="半年"></nz-option>
+                <nz-option nzValue="1年" nzLabel="1年"></nz-option>
+                <nz-option nzValue="2年" nzLabel="2年"></nz-option>
+                <nz-option nzValue="3年" nzLabel="3年"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修金额" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.money" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="交付时间" [nzSpan]="1">
+            <nz-date-picker [nzPlaceHolder]="'请选择交付时间'" [(ngModel)]="selectData.finishRepair" nzSize="small" (ngModelChange)="applyTimeChange($event)"></nz-date-picker>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修人员" [nzSpan]="1">{{common.adminListTranslate(selectData.maintenance_man)}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="创建时间" [nzSpan]="2">{{selectData.creat_time}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="物品清单" [nzSpan]="2"><input class="w450" nz-input [(ngModel)]="selectData.repairList" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="出现异常" [nzSpan]="2"><input class="w450" nz-input [(ngModel)]="selectData.error" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修原因" [nzSpan]="2"><input class="w450" nz-input [(ngModel)]="selectData.reason" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="维修备注" [nzSpan]="2"><input class="w450" nz-input [(ngModel)]="selectData.des" nzSize="small" /></nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="save()"><i nz-icon nzType="save"></i>保存修改</button>
+</nz-drawer>
+<nz-modal [(nzVisible)]="displayCompleteColumn" nzTitle="维修单完成提示" (nzOnCancel)="displayCompleteColumn = false" (nzOnOk)="completeRepair()">
+    <p *ngIf="chooseId !== null">确定维修单 {{chooseId}} 已经完成？</p>
+</nz-modal>

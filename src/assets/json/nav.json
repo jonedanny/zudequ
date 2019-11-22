@@ -1,0 +1,119 @@
+[
+    {
+       "name": "数据概览",
+       "selected": false,
+       "ico": "radar-chart",
+       "url": "DataOverviewComponent"
+    },
+    {
+        "name": "租赁管理",
+        "ico": "account-book",
+        "child": [
+            {
+                "name": "历史租赁信息补录",
+                "selected": false,
+                "url": "LeaseInfoSupplement"
+            },
+            {
+                "name": "设备历史租赁查询",
+                "selected": false,
+                "url": "LeaseInfoView"
+            }
+        ]
+    },
+    {
+        "name": "订单管理",
+        "ico": "carry-out",
+        "child": [
+            {
+                "name": "订单创建",
+                "selected": false,
+                "url": "OrderCreat"
+            },
+            {
+                "name": "租赁中订单",
+                "selected": false,
+                "url": "OrderEdit"
+            },
+            {
+                "name": "完结订单查询",
+                "selected": false,
+                "url": "OrderFinishSearch"
+            }
+        ]
+    },
+    {
+        "name": "商品管理",
+        "ico": "block",
+        "child": [
+            {
+                "name": "商品分类管理",
+                "selected": false,
+                "url": "ProductClassifyManagement"
+            },
+            {
+                "name": "商品添加",
+                "selected": false,
+                "url": "ProductAdd"
+            },
+            {
+                "name": "商品查询",
+                "selected": false,
+                "url": "ProductSearch"
+            }
+        ]
+    },
+    {
+        "name": "游戏设备维修",
+        "ico": "tool",
+        "child": [
+            {
+                "name": "添加维修信息",
+                "selected": false,
+                "url": "RepairAdd"
+            },
+            {
+                "name": "维修信息编辑",
+                "selected": false,
+                "url": "RepairEdit"
+            },
+            {
+                "name": "客户提交资料查询",
+                "selected": false,
+                "url": "CustomerRepairSearch"
+            }
+        ]
+    },
+    {
+        "name": "趣币管理",
+        "ico": "dollar",
+        "child": [
+            {
+                "name": "用户趣币操作",
+                "selected": false,
+                "url": "QbEdit"
+            }
+        ]
+    },
+    {
+        "name": "用户管理",
+        "ico": "usergroup-add",
+        "child": [
+            {
+                "name": "管理员权限管理",
+                "selected": false,
+                "url": "UserPowerManagement"
+            },
+            {
+                "name": "用户列表查询",
+                "selected": false,
+                "url": "UserListSearch"
+            },
+            {
+                "name": "用户征信查询",
+                "selected": false,
+                "url": "UserCreditSearch"
+            }
+        ]
+    }
+]

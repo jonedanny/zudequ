@@ -1,0 +1,138 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="2">
+            <input type="text" nz-input [(ngModel)]="fillterData.id" placeholder="设备ID" />
+        </div>
+        <div nz-col nzSpan="2">
+            <input type="text" nz-input [(ngModel)]="fillterData.name" placeholder="设备名" />
+        </div>
+        <div nz-col nzSpan="2">
+            <nz-select [(ngModel)]="fillterData.status" class="w100p" nzPlaceHolder="状态" nzAllowClear>
+                <nz-option nzValue="-1" nzLabel="全部"></nz-option>
+                <nz-option nzValue="0" nzLabel="未租"></nz-option>
+                <nz-option nzValue="1" nzLabel="租赁中"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="3">
+            <nz-select [(ngModel)]="fillterData.origin" class="w100p" nzPlaceHolder="请选择租赁人" nzAllowClear>
+                <nz-option *ngFor="let item of common.adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
+                </nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input [(ngModel)]="fillterData.price" placeholder="请输入设备价格 条件 '<='" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzAlign="left">ID</th>
+            <th nzWidth="250px" nzAlign="left" nzLeft="0px">设备名</th>
+            <th nzWidth="100px" nzAlign="left">所属部门</th>
+            <th nzWidth="200px" nzAlign="left">所属分类</th>
+            <th nzWidth="100px" nzAlign="left">状态</th>
+            <th nzWidth="100px" nzAlign="left">来源</th>
+            <th nzWidth="100px" nzAlign="left">设备价格</th>
+            <th nzWidth="100px" nzAlign="left">出租价格</th>
+            <th nzWidth="200px" nzAlign="left">入库时间</th>
+            <th nzWidth="300px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td nzLeft="0px"><span class="w200 ellipsis">{{item.name}}</span></td>
+            <td>{{item.department}}</td>
+            <td>
+                <nz-collapse>
+                    <nz-collapse-panel>
+                        <p>分类1: {{item.classify_a}}</p>
+                        <p>分类2: {{item.classify_b}}</p>
+                        <p>分类3: {{item.classify_c}}</p>
+                    </nz-collapse-panel>
+                </nz-collapse>
+            </td>
+            <td [ngClass]="{'c_green':item.is_sell === '1','c_orange':item.is_sell === '0'}">
+                {{item.is_sell === '1'?'租赁中 ...':'未租'}}</td>
+            <td>{{common.adminListTranslate(item.origin)}}</td>
+            <td>{{item.price}}</td>
+            <td>{{item.out_price}}</td>
+            <td>{{item.creat_time}}</td>
+            <td nzRight="0px">
+                <a (click)="Edit(item)">编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="viewLeaseHistory(item)">历史租赁记录</a>
+                <!-- <nz-divider nzType="vertical"></nz-divider>
+                <a>损坏</a> -->
+                <!-- <nz-divider nzType="vertical"></nz-divider>
+                <a nzType="danger" (click)="deleteDevice(item)"><i nz-icon nzType="delete"></i>删除</a> -->
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer *ngIf="selectData !== null" [nzClosable]="false" [nzWidth]="600" [nzVisible]="visible" nzPlacement="left" nzTitle="商品明细" (nzOnClose)="close()">
+    <nz-descriptions [nzColumn]="2" nzTitle="状态">
+        <nz-descriptions-item nzTitle="出货" [nzSpan]="1">{{selectData.is_sell === '0' ? '未出' : '已出'}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="仓位" [nzSpan]="1">{{selectData.locked === '0' ? '正常' : '锁仓'}}</nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <nz-descriptions [nzColumn]="2">
+        <nz-descriptions-item nzTitle="ID" [nzSpan]="1">{{selectData.id}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="名称" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.name" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="部门" [nzSpan]="2">{{selectData.department}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="所属分类" [nzSpan]="2">
+            <nz-input-group nzCompact>
+                <nz-select [(ngModel)]="classifyChoose.a" (ngModelChange)="changeClassify($event,'a')" class="w140">
+                    <nz-option *ngFor="let item of classifyShow.a" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+                <nz-select [(ngModel)]="classifyChoose.b" (ngModelChange)="changeClassify($event,'b')" class="w140">
+                    <nz-option nzValue="-1" nzLabel="请选择二级分类"></nz-option>
+                    <nz-option *ngFor="let item of classifyShow.b" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+                <nz-select [(ngModel)]="classifyChoose.c" class="w140">
+                    <nz-option nzValue="-1" nzLabel="请选择三级分类"></nz-option>
+                    <nz-option *ngFor="let item of classifyShow.c" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="创建时间" [nzSpan]="2">{{selectData.creat_time}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="商品备注" [nzSpan]="2">
+            <textarea nz-input [(ngModel)]="selectData.des" [nzAutosize]="{ minRows: 3, maxRows: 6 }" class="w450 mt-10"></textarea>
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <nz-descriptions [nzColumn]="2">
+        <nz-descriptions-item nzTitle="所属人员" [nzSpan]="1">
+            <nz-select [(ngModel)]="selectData.origin" class="w120" nzPlaceHolder="请选择租赁人" nzAllowClear>
+                <nz-option *ngFor="let item of common.adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="设备价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.price" nzSize="small"></nz-input-number></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.out_price" nzSize="small"></nz-input-number></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="产生收益" [nzSpan]="1">{{selectData.profit}}</nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="saveDeviceInfo()"><i nz-icon nzType="save"></i>保存修改</button>
+</nz-drawer>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="leaseHistory"
+    nzPlacement="left"
+    [nzWidth]="350"
+    nzTitle="{{leaseHistoryTitle}}"
+    (nzOnClose)="leaseHistory = false"
+>
+    <nz-empty *ngIf="leaseHistoryList.length === 0"></nz-empty>
+    <nz-timeline *ngIf="leaseHistoryList.length > 0">
+        <nz-timeline-item *ngFor="let item of leaseHistoryList">
+            <b class="c_grey">{{item.creat_time}}</b> {{item.profit}} 元
+        </nz-timeline-item>
+    </nz-timeline>
+</nz-drawer>

@@ -1,0 +1,27 @@
+.del-pro {
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #eee;
+    p:first-child {
+        margin-bottom: 6px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #ddd;
+    }
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+#device-list {
+    max-height: 200px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+#add-device-list {
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    margin: 10px 0;
+    height: 300px;
+    overflow: auto;
+}

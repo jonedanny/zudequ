@@ -1,0 +1,100 @@
+<div nz-row>
+    <div nz-col nzSpan="24">
+        <nz-row>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="productAll | number" [nzTitle]="'设备总数'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="productLeased | number" [nzTitle]="'出库设备'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="maintenanceDevice | number: '1.0-2'" [nzTitle]="'维修设备'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="allLeaseComein | number: '1.0-2'" [nzTitle]="'租金收入 (CNY)'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="investmentMoney | number: '1.0-2'" [nzTitle]="'总资金 (CNY)'"></nz-statistic>
+            </nz-col>
+            <nz-col [nzSpan]="4">
+                <nz-statistic [nzValue]="annualizedRate | number" [nzTitle]="'年化率 %'"></nz-statistic>
+            </nz-col>
+        </nz-row>
+    </div>
+</div>
+<div id="calc-col">
+    <div nz-row [nzGutter]="8">
+        <div nz-col [nzSpan]="8">
+            <nz-card nzTitle="设备租金收入" [nzExtra]="rentIncome">
+                <nz-empty *ngIf="recentlyComein.length === 0"></nz-empty>
+                <nz-timeline *ngIf="recentlyComein.length > 0">
+                    <nz-timeline-item *ngFor="let item of recentlyComein.slice(0,5)">{{item.device_name}} <b>[租金: {{item.lease_price}} 元]</b> [{{item.lease_day}}天] <b class="c_grey">{{item.creat_time}}</b></nz-timeline-item>
+                </nz-timeline>
+            </nz-card>
+            <ng-template #rentIncome>
+                <a (click)="recentlyComeinDetail = true">更多</a>
+            </ng-template>
+        </div>
+        <div nz-col [nzSpan]="8">
+            <nz-card nzTitle="设备采购" [nzExtra]="devicePurchaseNumber">
+                <nz-empty *ngIf="recentlyDevice.length === 0"></nz-empty>
+                <nz-timeline *ngIf="recentlyDevice.length > 0">
+                    <nz-timeline-item *ngFor="let item of recentlyDevice.slice(0,5)">{{item.name}} <b>[收购价格: {{item.price}} 元]</b> <b class="c_grey">{{item.creat_time}}</b></nz-timeline-item>
+                </nz-timeline>
+            </nz-card>
+            <ng-template #devicePurchaseNumber>
+                <a (click)="recentlyDeviceDetail = true">更多</a>
+            </ng-template>
+        </div>
+        <div nz-col [nzSpan]="8">
+            <nz-card nzTitle="设备维修记录" [nzExtra]="devicePurchaseMoney">
+                <nz-empty></nz-empty>
+            </nz-card>
+            <ng-template #devicePurchaseMoney>
+                <a>更多</a>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<div id="user-calc">
+    <nz-card nzTitle="用户量统计 ({{customerTotal}})" [nzExtra]="userCalc">
+        <div echarts [options]="chartOption" class="customer-calc"></div>
+    </nz-card>
+    <ng-template #userCalc>
+        <nz-range-picker
+            nzFormat="yyyy-MM-dd"
+            (nzOnOpenChange)="onChangeTime($event)"
+            nzAllowClear="true"
+            [(ngModel)]="date"
+            (ngModelChange)="isClearTime()"
+        ></nz-range-picker>
+    </ng-template>
+</div>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="recentlyComeinDetail"
+    nzPlacement="right"
+    [nzWidth]="500"
+    nzTitle="租金收入 ({{recentlyComein.length}} 条数据)"
+    (nzOnClose)="recentlyComeinDetail = false"
+>
+    <nz-timeline>
+        <nz-timeline-item *ngFor="let item of recentlyComein">
+            {{item.device_name}} <b>[租金: {{item.lease_price}} 元]</b> [{{item.lease_day}}天] <b class="c_grey">{{item.creat_time}}</b>
+        </nz-timeline-item>
+    </nz-timeline>
+</nz-drawer>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="recentlyDeviceDetail"
+    nzPlacement="right"
+    [nzWidth]="500"
+    nzTitle="设备采购 ({{recentlyDevice.length}} 条数据)"
+    (nzOnClose)="recentlyDeviceDetail = false"
+>
+    <nz-timeline>
+        <nz-timeline-item *ngFor="let item of recentlyDevice">
+            {{item.name}} <b>[收购价格: {{item.price}} 元]</b> <b class="c_grey">{{item.creat_time}}</b>
+        </nz-timeline-item>
+    </nz-timeline>
+</nz-drawer>

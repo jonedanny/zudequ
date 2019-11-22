@@ -1,0 +1,58 @@
+<nz-spin [nzSpinning]="isSpinning">
+    <form nz-form (ngSubmit)="submit()">
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>选择部门</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <nz-select class="w160" nzAllowClear nzPlaceHolder="请选择部门" [(ngModel)]="chooseInfo.department" name="department">
+                    <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>选择分类</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" *ngIf="classifyOutputData.length > 0" >
+                <nz-cascader
+                    nzChangeOnSelect
+                    [nzOptions]="classifyOutputData"
+                    nzPlaceHolder="请选择分类"
+                    (nzSelectionChange)="changeClassify($event)"
+                    [(ngModel)]="chooseInfo.classifyValues"
+                    name="classify"
+                >
+                </nz-cascader>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>商品名称</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                <input nz-input placeholder="请输入商品名称" [(ngModel)]="chooseInfo.name" name="name" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">商品其他信息</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" nzExtra="如果不是租赁商品,可以不填写">
+                <nz-input-group nzCompact>
+                    <nz-select nzAllowClear nzPlaceHolder="请选择商品所属人" class="w160" [(ngModel)]="chooseInfo.origin" name="origin">
+                        <nz-option *ngFor="let item of adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+                    </nz-select>
+                    <nz-input-number class="w120" [nzMin]="0" [nzMax]="99999" [nzStep]="0.1" nzPlaceHolder="商品成本金额" [(ngModel)]="chooseInfo.price" name="price">
+                    </nz-input-number>
+                    <nz-input-number class="w120" [nzMin]="0" [nzMax]="99999" [nzStep]="0.1" nzPlaceHolder="商品租金/天" [(ngModel)]="chooseInfo.out_price" name="out_price">
+                    </nz-input-number>
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24">商品备注</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+                <textarea nz-input placeholder="请输入商品备注" [nzAutosize]="{ minRows: 4, maxRows: 10 }" [(ngModel)]="chooseInfo.des" name="des"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 16, offset: 8 }">
+                <button nz-button nzType="primary">添加商品</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-spin>

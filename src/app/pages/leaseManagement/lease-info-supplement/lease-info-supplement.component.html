@@ -1,0 +1,90 @@
+<form nz-form (ngSubmit)="submitForm()">
+    <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>请选择出租人</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="请选择出租人 ..."
+                    [(ngModel)]="submitData.userId"
+                    (ngModelChange)="searchDeviceList()"
+                    name="users"
+                >
+                    <nz-option *ngFor="let item of adminList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>请选择设备</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-select
+                nzShowSearch
+                nzAllowClear
+                nzPlaceHolder="请选择设备 ..."
+                [(ngModel)]="submitData.deviceId"
+                (ngModelChange)="selectedDevice()"
+                name="device"
+            >
+                <nz-option nzLabel="" nzValue=""></nz-option>
+                <nz-option *ngFor="let item of deviceList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>请选择租赁时间</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-range-picker
+                    nzFormat="yyyy-MM-dd"
+                    (nzOnCalendarChange)="onChangeTime($event)"
+              ></nz-range-picker>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>输入订单ID</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input name="order-id" [(ngModel)]="submitData.orderId" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">设备租金</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{submitData.outPrice}} / 天
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">租赁天数</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{submitData.leaseDay}} 天
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">预计租金</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{submitData.expectLease}} 元
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>输入租金</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzExtra="去除装配费等额外费用后的实际租金收入.">
+            <nz-input-number name="money" [nzMin]="0" [nzMax]="100000" [nzStep]="1" [(ngModel)]="submitData.leaseMoney" (ngModelChange)="calcOtherFee()" (nzBlur)="calcOtherFee()"></nz-input-number>
+            (单位: 元)
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">装配等其他费用</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            {{submitData.otherPrice}} (单位: 元)
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>说明备注</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <textarea name="description" nz-input placeholder="请在这里备注说明 ..." nzAutosize [nzAutosize]="{ minRows: 5, maxRows: 10 }" [(ngModel)]="submitData.des"></textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item nz-row>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <button nz-button nzType="primary" [nzLoading]="submitLoading">提交设备信息补录</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

@@ -1,0 +1,128 @@
+<form nz-form>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>选择部门</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-select class="w350" nzAllowClear nzPlaceHolder="请选择部门" [(ngModel)]="textInfo.department"
+                name="department" (ngModelChange)="changeDepartment()">
+                <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
+                </nz-option>
+            </nz-select>
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>途径来源</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input class="w350" nz-input placeholder="请输入途径来源" name="origin" [(ngModel)]="textInfo.origin" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>租赁日期</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-group nzCompact>
+                <nz-date-picker name="date" [(ngModel)]="textInfo.date" [nzPlaceHolder]="'请选择租赁起始日'" (ngModelChange)="orderTimeChange($event)"></nz-date-picker>
+                <nz-input-number name="leaseDay" [(ngModel)]="leaseDay" class="w185" [nzMin]="1" [nzStep]="1" [nzPlaceHolder]="'请输入租赁天数'"></nz-input-number>
+            </nz-input-group>
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>趣币会员</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-number class="w350" [(ngModel)]="textInfo.phone" name="phone" nzPlaceHolder="请输入趣币会员"></nz-input-number>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>金额</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-number class="w350" [nzMin]="1" [nzMax]="9999" name="money" [(ngModel)]="textInfo.money"></nz-input-number>
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>押金</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-number class="w350" [nzMin]="1" [nzMax]="9999" name="deposit" [(ngModel)]="textInfo.deposit"></nz-input-number>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>店铺</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-select class="w350" nzAllowClear nzPlaceHolder="请选择店铺" name="store" [(ngModel)]="textInfo.store">
+                <nz-option *ngFor="let item of storeList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>操作员</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            {{userLoginInfo.name}}
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item [hidden]="textInfo.department === null" *ngIf="this.classifyOutputData.length > 0">
+        <nz-form-label [nzSm]="3" nzRequired>添加订单商品</nz-form-label>
+        <nz-form-control [nzSm]="21">
+            <nz-spin [nzSpinning]="isSpinning">
+                <div nz-row class="add-product">
+                    <div nz-col nzSpan="12">
+                        <div id="origin">
+                            <div id="filter">
+                                <nz-input-group nzCompact>
+                                    <nz-cascader nzChangeOnSelect [nzOptions]="classifyOutputData" nzPlaceHolder="请选择分类"
+                                        (nzSelectionChange)="changeClassify($event)"
+                                        [(ngModel)]="textInfo.classifyValues" (ngModelChange)="clearClassify()"
+                                        name="classify">
+                                    </nz-cascader>
+                                    <input nz-input placeholder="按商品名模糊搜索" name="name" [(ngModel)]="textInfo.name"
+                                        (keyup)="refreshProList()" />
+                                </nz-input-group>
+                            </div>
+                            <div id="origin-content">
+                                <select multiple="multiple" class="multiple" [(ngModel)]="__productList"
+                                    name="__productList">
+                                    <option *ngFor="let item of productList" value="{{item.id}}" title="{{item.des}}">
+                                        <b *ngIf="item.origin !== '0'">[优先]</b>
+                                        <b *ngIf="item.des.trim() != ''">[备注]</b>
+                                        ID:{{item.id}} - {{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="calc">
+                                仓库中的商品:
+                                {{textInfo.originNum}} 项
+                            </div>
+                        </div>
+                    </div>
+                    <div nz-col nzSpan="2">
+                        <div id="exchange">
+                            <button nz-button nzType="primary"  (click)="add()"><i nz-icon
+                                    nzType="arrow-right" nzTheme="outline"></i></button>
+                            <br />
+                            <button nz-button nzType="primary" (click)="remove()"><i nz-icon
+                                    nzType="arrow-left" nzTheme="outline"></i></button>
+                        </div>
+                    </div>
+                    <div nz-col nzSpan="10">
+                        <div id="target">
+                            <div id="target-content">
+                                <select multiple="multiple" class="multiple" [(ngModel)]="__productSelectList"
+                                    name="__productSelectList">
+                                    <option *ngFor="let item of productSelectList" value="{{item.id}}" title="{{item.des}}">
+                                        <b *ngIf="item.origin !== '0'">[优先]</b>
+                                        <b *ngIf="item.des.trim() != ''">[备注]</b>
+                                        ID:{{item.id}} - {{item.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="calc">
+                                准备中的商品:
+                                {{textInfo.targetNum}} 项
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nz-spin>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">备注</nz-form-label>
+        <nz-form-control [nzSpan]="21">
+            <textarea nz-input placeholder="请输入备注" [nzAutosize]="{ minRows: 4, maxRows: 8 }" name="des" [(ngModel)]="textInfo.des">
+            </textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control [nzXs]="{ span: 21, offset: 3 }">
+            <button nz-button nzType="primary" [nzLoading]="isSpinning" (click)="submitForm()">生成订单</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

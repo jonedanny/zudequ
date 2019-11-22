@@ -1,0 +1,47 @@
+<div id="main-container">
+    <nz-layout>
+        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+            <div class="t-logo">
+                <img [hidden]="isCollapsed" src="../../assets/images/m-logo.png" />
+                <img [hidden]="!isCollapsed" src="../../assets/images/s-logo.png" />
+            </div>
+            <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed" id="main-nav">
+                <li nz-menu-item *ngFor="let item of navList" [hidden]="item.child" (click)="changePage(item.url)"
+                    [nzSelected]="chooseNav == item.url">
+                    <i nz-icon nzType="{{item.ico}}" nzTheme="outline"></i>
+                    <span>{{item.name}}</span>
+                </li>
+                <li *ngFor="let item of navList" nz-submenu nzTitle="{{item.name}}" nzIcon="{{item.ico}}"
+                    [hidden]="!item.child" nzOpen>
+                    <ul *ngIf="item.child">
+                        <li nz-menu-item *ngFor="let items of item.child" (click)="changePage(items.url)"
+                            [nzSelected]="chooseNav == items.url">{{items.name}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout>
+            <nz-header>
+                <div nz-row>
+                    <div nz-col nzSpan="4">
+                        <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+                            (click)="isCollapsed = !isCollapsed"></i>
+                    </div>
+                    <div nz-col nzSpan="12" nzOffset="8" class="login-out">
+                        <span>您好，尊敬的用户: {{userLoginInfo.name}}</span>
+                        <a (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i> 退出登入</a>
+                    </div>
+                </div>
+            </nz-header>
+            <nz-content>
+                <nz-breadcrumb>
+                    <nz-breadcrumb-item *ngFor="let item of breadcrumb">{{item}}</nz-breadcrumb-item>
+                </nz-breadcrumb>
+                <div class="inner-content">
+                    <router-outlet></router-outlet>
+                </div>
+            </nz-content>
+            <nz-footer>Powered by 租得趣 © 2019. 代码授权: Jone-danny. 当前版本: 1.0.0-build</nz-footer>
+        </nz-layout>
+    </nz-layout>
+</div>

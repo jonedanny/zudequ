@@ -1,0 +1,65 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input [(ngModel)]="fillterData.username" placeholder="请输入用户名" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzAlign="left">ID</th>
+            <th nzWidth="250px" nzAlign="left" nzLeft="0px">用户名</th>
+            <th nzWidth="100px" nzAlign="left">趣币</th>
+            <th nzWidth="100px" nzAlign="left">真实姓名</th>
+            <th nzWidth="200px" nzAlign="left">身份证</th>
+            <th nzWidth="100px" nzAlign="left">性别</th>
+            <th nzWidth="150px" nzAlign="left">是否完善资料</th>
+            <th nzWidth="150px" nzAlign="left">个人征信分数</th>
+            <th nzWidth="230px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td nzLeft="0px"><span class="w200 ellipsis">{{item.username}}</span></td>
+            <td>{{item.coins}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.identify}}</td>
+            <td>{{item.sex}}</td>
+            <td>{{item.perfect_information}}</td>
+            <td>{{item.creditScore}}</td>
+            <td nzRight="0px">
+                <a (click)="openResetPwdColumn(item)">重置密码</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nzType="danger" (click)="deleteUser(item)"><i nz-icon nzType="delete"></i>删除</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-modal
+    [(nzVisible)]="resetPwdDisplay"
+    nzTitle="重置密码"
+    (nzOnCancel)="resetPwdDisplay = false"
+    (nzOnOk)="resetPwd()"
+    [nzOkLoading]="resetLoading"
+    [nzWidth]="350"
+    *ngIf="currentUser !== null"
+>
+    <p>
+        <nz-input-group nzAddOnBefore="用户名">
+            <input type="text" nz-input [(ngModel)]="currentUser.username" [disabled]="true" />
+        </nz-input-group>
+    </p>
+    <p>
+        <nz-input-group nzAddOnBefore="新密码">
+            <input type="text" nz-input [(ngModel)]="resetPwdValue" placeholder="密码不能小于6位" />
+        </nz-input-group>
+    </p>
+</nz-modal>

@@ -1,0 +1,274 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="2">
+            <input type="text" nz-input [(ngModel)]="fillterData.orderId" placeholder="订单号" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.option" placeholder="商品名" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.origin" placeholder="付款途径" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.des" placeholder="备注" />
+        </div>
+        <div nz-col nzSpan="3">
+            <nz-select nzAllowClear nzPlaceHolder="部门" name="origin" class="w100p" [(ngModel)]="fillterData.department">
+                <nz-option nzValue="" nzLabel="请选择部门"></nz-option>
+                <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
+                </nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="3">
+            <nz-select nzAllowClear nzPlaceHolder="相关租赁人" name="origin" class="w100p"
+                [(ngModel)]="fillterData.relativePeople">
+                <nz-option nzValue="" nzLabel="请选择相关租赁人"></nz-option>
+                <nz-option *ngFor="let item of adminList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="100px" nzShowSort nzSortKey="id" nzLeft="0px">订单ID</th>
+            <th nzWidth="250px" nzShowSort nzSortKey="end">出租时间</th>
+            <th nzWidth="100px">天数</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="money">租金</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="deposit">押金</th>
+            <th nzWidth="200px">付款途径</th>
+            <th nzWidth="150px">趣币会员</th>
+            <th nzWidth="100px">订单项目</th>
+            <th nzWidth="100px">所属部门</th>
+            <th nzWidth="100px">订单来源</th>
+            <th nzWidth="100px">操作员</th>
+            <th nzWidth="250px">备注</th>
+            <th nzWidth="200px">创建时间</th>
+            <th nzWidth="250px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td nzLeft="0px">{{item.id}}</td>
+            <td>{{item.start}} / {{item.end}}</td>
+            <td>{{common.DateDiffNormal(item.start,item.end)}}</td>
+            <td>{{item.money}}</td>
+            <td>{{item.deposit}}</td>
+            <td>{{item.origin}}</td>
+            <td>{{item.phone}}</td>
+            <td>
+                <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
+                    (nzVisibleChange)="viewOrderDetail($event,item,true)">
+                    查看明细
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <div class="c_orange" *ngIf="editData && editData.option !== null && editData.option.length === 0"><i nz-icon nzType="info-circle" nzTheme="outline"></i> 没有找到相关数据</div>
+                    <ul nz-menu nzSelectable>
+                        <li nz-menu-item *ngIf="orderDetail.length === 0">
+                            <nz-spin nzSimple></nz-spin>
+                        </li>
+                        <li nz-menu-item *ngFor="let item of orderDetail" [ngClass]="{'c_orange': item.is_back === '1','c_red':item.is_sell === '1'}">
+                            ID: {{item.pid}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [租金:
+                            {{item.rent || '未知'}}] [{{item.userName}}]
+                            <span *ngIf="item.is_back === '1'">[已归还]</span>
+                            <span *ngIf="item.is_sell === '1'">[已买断]</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+            </td>
+            <td>{{__departmentText(item.department)}}</td>
+            <td>{{item.store}}</td>
+            <td>{{item.opteration}}</td>
+            <td>{{item.des}}</td>
+            <td>{{item.addTime}}</td>
+            <td nzRight="0px">
+                <a (click)="printOrder(item)">打印</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="edit(item)">编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="completeOrderWarning(item)">完成</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="shiftCompleteOrderWarning(item)">提前归还</a>
+                <!-- <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="deleteOrderWarning(item)">删除</a> -->
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" [nzWidth]="550" nzTitle="订单编辑"
+    (nzOnClose)="visible = false">
+    <nz-descriptions [nzColumn]="2" *ngIf="editData !== null">
+        <nz-descriptions-item nzTitle="订单 - ID" [nzSpan]="2">
+            {{editData.id}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="付款途径" [nzSpan]="1">
+            <input nz-input placeholder="付款途径" class="w160" [(ngModel)]="editData.origin" />
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="来源店铺" [nzSpan]="1">
+            <nz-select class="w160" nzAllowClear nzPlaceHolder="请选择店铺" name="store" [(ngModel)]="editData.store">
+                <nz-option *ngFor="let item of storeList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="订单金额" [nzSpan]="1">
+            <nz-input-number class="w160" [(ngModel)]="editData.money"></nz-input-number>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="订单押金" [nzSpan]="1">
+            <nz-input-number class="w160" [(ngModel)]="editData.deposit"></nz-input-number>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁起始" [nzSpan]="1">
+            <nz-date-picker class="w160" [ngModel]="editData.start" (ngModelChange)="changedate($event,'start')">
+            </nz-date-picker>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁结束" [nzSpan]="1">
+            <nz-date-picker class="w160" [ngModel]="editData.end" (ngModelChange)="changedate($event,'end')">
+            </nz-date-picker>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="商品移除" [nzSpan]="2">
+            <div id="device-list">
+                <nz-spin nzSimple *ngIf="editData.option === null"></nz-spin>
+                <div class="c_orange" *ngIf="editData.option !== null && editData.option.length === 0"><i nz-icon nzType="info-circle" nzTheme="outline"></i> 没有找到相关数据</div>
+                <div *ngFor="let item of editData.option" class="del-pro w410">
+                    <p><span><b>ID: {{item.pid}} {{item.p_name}}</b> ( {{item.start_time}} / {{item.end_time}} )</span></p>
+                    <p>
+                        <button nz-button nzType="danger" nzSize="small" [nzLoading]="loading" (click)="removeDeviceWarning(item)">
+                            <i nz-icon nzType="delete"></i>归还
+                        </button>
+                        &nbsp;
+                        <button nz-button nzSize="small" [nzLoading]="loading" (click)="buyOutDeviceWarning(item)">
+                            <i nz-icon nzType="pay-circle"></i>买断
+                        </button>
+                    </p>
+                </div>
+            </div>
+            <div id="add-device">
+                <button nz-button nzType="default" (click)="displayAddDeviceColumn = true"><i nz-icon
+                        nzType="folder-add" nzTheme="outline"></i>添加商品</button>
+            </div>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="订单备注" [nzSpan]="1">
+            <textarea nz-input [(ngModel)]="editData.des" [nzAutosize]="{ minRows: 4, maxRows: 6 }"
+                class="w410"></textarea>
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="saveEdit()"><i nz-icon
+            nzType="save"></i>保存修改</button>
+</nz-drawer>
+<nz-modal [(nzVisible)]="displayDeleteColumn" nzTitle="订单删除提示" (nzOnCancel)="displayDeleteColumn = false" [nzOkLoading]="loading"
+    (nzOnOk)="deleteOrder()">
+    <p *ngIf="deleteData !== null">确定要删除订单 {{deleteData.id}} 吗？</p>
+</nz-modal>
+<nz-modal [(nzVisible)]="displayCompleteColumn" nzTitle="订单完成提示" (nzOnCancel)="displayCompleteColumn = false" [nzOkLoading]="loading"
+    (nzOnOk)="completeOrder()">
+    <p *ngIf="completeData !== null">确定订单 {{completeData.id}} 已经完成？</p>
+</nz-modal>
+<nz-modal [(nzVisible)]="displayBuyoutColumn" nzTitle="买断商品提示" [nzOkLoading]="loading" (nzOnCancel)="displayBuyoutColumn = false"
+    (nzOnOk)="buyOutDevice()">
+    <form nz-form>
+        <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24">买断商品</nz-form-label>
+                <nz-form-control [nzSm]="18" [nzXs]="24">
+                    {{buyoutData.pName}} [{{buyoutData.userName}}]
+                </nz-form-control>
+            </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">买断价格</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <nz-input-number class="w180" [(ngModel)]="buyoutData.price" name="price"></nz-input-number> (元)
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">备注</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input class="w300" [(ngModel)]="buyoutData.des" name="des" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
+<nz-modal [(nzVisible)]="displayReturnCompleteColumn" nzTitle="商品归还"
+    (nzOnCancel)="displayReturnCompleteColumn = false" (nzOnOk)="removeDevice()">
+    <p class="c_orange">
+        <i nz-icon nzType="warning" nzTheme="outline"></i>
+        注意: 商品归还时间不能大于当前时间 !
+    </p>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSm]="5" [nzXs]="24">商品归还时间</nz-form-label>
+            <nz-form-control [nzSm]="19" [nzXs]="24">
+                <nz-date-picker [ngModel]="removeModifyDeviceTime" (ngModelChange)="editOrderDeviceTime($event,'rejuce')" name="return"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
+<nz-modal [(nzVisible)]="displayShiftCompleteColumn" nzTitle="订单提前完成信息确认"
+    (nzOnCancel)="displayShiftCompleteColumn = false" (nzOnOk)="shiftCompleteOrder()">
+    <p *ngIf="completeData !== null">确定订单 {{completeData.id}} 需要提前完成？</p>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>运费</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <nz-radio-group [(ngModel)]="shiftCompleteOrderData.freightPayer" name="freightPayer">
+                    <label nz-radio nzValue="0">用户承担运费</label>
+                    <label nz-radio nzValue="1">共同承担运费</label>
+                    <label nz-radio nzValue="2">平台承担运费</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>租金</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <nz-radio-group [(ngModel)]="shiftCompleteOrderData.backRent" name="backRent">
+                    <label nz-radio nzValue="0">不退租金</label>
+                    <label nz-radio nzValue="1">退还租金</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="shiftCompleteOrderData.backRent === '1'">
+            <nz-form-label [nzSm]="3" [nzXs]="24">天数</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+                <nz-input-group nzAddOnAfter="填写客户实际租赁的天数">
+                    <input nz-input [(ngModel)]="shiftCompleteOrderData.days" name="days" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24">备注</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <input nz-input [(ngModel)]="shiftCompleteOrderData.des" name="des" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
+<nz-modal [(nzVisible)]="displayAddDeviceColumn" nzTitle="商品添加" (nzOnCancel)="displayAddDeviceColumn = false"
+    (nzOnOk)="addDevice()" [nzOkLoading]="loading">
+    <nz-descriptions [nzColumn]="1">
+        <nz-descriptions-item nzTitle="商品" [nzSpan]="1">
+            <nz-tag nzMode="closeable" (nzOnClose)="removePro(item)" *ngFor="let item of currentAddPro">
+                {{item.name}}
+            </nz-tag>
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-input-group nzCompact>
+        <input class="w230" type="text" nz-input placeholder="可按ID或商品名进行模糊查询" [(ngModel)]="addDeviceFilter" (keyup)="addDeviceFilterSearch()" />
+        <nz-date-picker nzPlaceHolder="商品起租时间" [ngModel]="addModifyDeviceTime" (ngModelChange)="editOrderDeviceTime($event,'add')"></nz-date-picker>
+    </nz-input-group>
+    
+    <ng-template #suffixIconSearch>
+        <i nz-icon nzType="search"></i>
+    </ng-template>
+    <nz-spin [nzSpinning]="loading">
+        <div id="add-device-list">
+            <p *ngFor="let item of addDeviceList">
+                <span>ID:{{item.id}}</span> &nbsp;
+                <span>{{item.name | slice:0:30}}</span> &nbsp;&nbsp;
+                <a (click)="addPro(item)"><i nz-icon nzType="file-add" nzTheme="outline"></i> 添加</a>
+            </p>
+        </div>
+    </nz-spin>
+</nz-modal>

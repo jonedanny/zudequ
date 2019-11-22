@@ -1,0 +1,107 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.orderId" placeholder="请输入订单ID" />
+        </div>
+        <div nz-col nzSpan="3">
+            <nz-select nzAllowClear nzPlaceHolder="相关租赁人" name="origin" class="w100p"
+                [(ngModel)]="fillterData.relativePeople">
+                <nz-option nzValue="" nzLabel="请选择相关租赁人"></nz-option>
+                <nz-option *ngFor="let item of adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.deviceName" placeholder="请输入要搜索的设备" />
+        </div>
+        <div nz-col nzSpan="4">
+            <nz-range-picker [nzFormat]="dateFormat" (nzOnCalendarChange)="onChangeFilterTime($event)"></nz-range-picker>
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="80px" nzAlign="left" nzLeft="0px" nzShowSort nzSortKey="id">ID</th>
+            <th nzWidth="200px" nzAlign="left" nzLeft="0px">设备名</th>
+            <th nzWidth="100px" nzAlign="left">归属</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="order_id">订单ID</th>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="is_pay">状态</th>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="lease_price">租金</th>
+            <th nzWidth="250px" nzAlign="left">租赁时间</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="lease_day">租赁天数</th>
+            <th nzWidth="100px" nzAlign="left">其他费用</th>
+            <th nzWidth="150px" nzAlign="left">备注</th>
+            <th nzWidth="250px" nzAlign="left">创建时间</th>
+            <th nzWidth="100px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td nzLeft="0px">{{item.id}}</td>
+            <td nzLeft="0px">{{item.device_name}}</td>
+            <td>{{item.lease_name}}</td>
+            <td>{{item.order_id}}</td>
+            <td [ngClass]="{'c_red': item.is_pay === '0','c_green': item.is_pay === '1'}">
+                {{item.is_pay === '0'?'待付':'已付'}}</td>
+            <td>{{item.lease_price}}</td>
+            <td>{{item.lease_start}}/{{item.lease_end}}</td>
+            <td>{{item.lease_day}}</td>
+            <td>{{item.other_price}}</td>
+            <td>{{item.des}}</td>
+            <td>{{item.creat_time}}</td>
+            <td nzRight="0px">
+                <a *ngIf="item.is_pay === '0'" (click)="payRentDisplay(item)">付款</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" [nzWidth]="550" nzTitle="支付租赁单"
+    (nzOnClose)="visible = false">
+    <nz-descriptions [nzColumn]="2" *ngIf="currentPayData !== null">
+        <nz-descriptions-item nzTitle="补录单 - ID" [nzSpan]="2">
+            {{currentPayData.id}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="设备名" [nzSpan]="1">
+            {{currentPayData.device_name}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="设备租金" [nzSpan]="1">
+            {{deviceLeaseMoney}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁时间" [nzSpan]="2">
+            <nz-range-picker [nzFormat]="dateFormat" [(ngModel)]="currentPayData.ranges" (ngModelChange)="onTimeChange($event)"></nz-range-picker>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁天数" [nzSpan]="1">
+            {{payData.lease_day}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="相关订单" [nzSpan]="1">
+            {{currentPayData.order_id}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="实际租金" [nzSpan]="1">
+            <nz-input-number
+                class="w160"
+                [(ngModel)]="payData.lease_price"
+                (ngModelChange)="changeMoney()"
+                (keyup)="changeMoney()"
+                (nzBlur)="changeMoney()"
+            >
+            </nz-input-number>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="其他费用" [nzSpan]="1">
+            {{payData.other_price}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="订单备注" [nzSpan]="2">
+            <textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 6 }" [(ngModel)]="payData.des" class="w410"></textarea>
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <p class="c_red">请确认支付信息后再提交，一旦提交则不可修改！</p>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="payRent()" [disabled]="payData.lease_start === '' || payData.lease_end === ''">
+        <i nz-icon nzType="pay-circle" nzTheme="outline"></i>付款
+    </button>
+</nz-drawer>

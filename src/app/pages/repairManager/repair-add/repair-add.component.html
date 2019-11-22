@@ -1,0 +1,85 @@
+<form nz-form>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">序列号</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.uid" name="uid" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3">淘宝ID</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.taobao_id" name="taobao_id" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">物流单号</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.order_id" name="order_id" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3">维修原因:</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.reason" name="reason" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">处理状态</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            {{postData.state}}
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3">收到物品清单</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.repairList" name="repairList" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">维修金额</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-number class="w350" [(ngModel)]="postData.money" name="money" ></nz-input-number>
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3">预计交付时间</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-date-picker [nzPlaceHolder]="'请选择交付时间'" [(ngModel)]="postData.finishRepair" name="finishRepair" (ngModelChange)="applyTimeChange($event)"></nz-date-picker>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">物品异常内容</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.error" name="error" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3">保修</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-select class="w350" nzAllowClear nzPlaceHolder="请选择保修时间" [(ngModel)]="postData.time" name="time">
+                <nz-option nzValue="无" nzLabel="无"></nz-option>
+                <nz-option nzValue="半个月" nzLabel="半个月"></nz-option>
+                <nz-option nzValue="1个月" nzLabel="1个月"></nz-option>
+                <nz-option nzValue="3个月" nzLabel="3个月"></nz-option>
+                <nz-option nzValue="半年" nzLabel="半年"></nz-option>
+                <nz-option nzValue="1年" nzLabel="1年"></nz-option>
+                <nz-option nzValue="2年" nzLabel="2年"></nz-option>
+                <nz-option nzValue="3年" nzLabel="3年"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">联系电话</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input nz-input [(ngModel)]="postData.phone" name="phone" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>维修人员</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-select class="w350" nzAllowClear nzPlaceHolder="请选择维修人员" [(ngModel)]="postData.maintenance_man" name="maintenance_man">
+                <nz-option *ngFor="let item of adminList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">备注</nz-form-label>
+        <nz-form-control [nzSpan]="21">
+            <textarea nz-input placeholder="请输入备注" [nzAutosize]="{ minRows: 4, maxRows: 8 }" [(ngModel)]="postData.des" name="des">
+            </textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control [nzXs]="{ span: 21, offset: 3 }">
+            <button nz-button nzType="primary" [nzLoading]="isSpinning" (click)="addRepairInfo()">生成维修工单</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

@@ -1,0 +1,40 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.repairID" placeholder="单号" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.taobaoID" placeholder="淘宝ID" />
+        </div>
+        <div nz-col nzSpan="3">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="200px" nzLeft="0px">单号</th>
+            <th nzWidth="200px">淘宝ID</th>
+            <th nzWidth="300px">物品清单</th>
+            <th nzWidth="300px">工单内容</th>
+            <th nzWidth="100px">联系方式</th>
+            <th nzWidth="400px">备注</th>
+            <th nzWidth="200px">创建时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td nzLeft="0px">{{item.repairID}}</td>
+            <td>{{item.taobaoID}}</td>
+            <td>{{item.proList}}</td>
+            <td>{{item.require}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.des}}</td>
+            <td>{{item.time}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

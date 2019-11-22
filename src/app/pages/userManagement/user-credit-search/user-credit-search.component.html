@@ -1,0 +1,214 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input placeholder="请输入用户手机号" [(ngModel)]="fillterData.phone" />
+        </div>
+        <div nz-col nzSpan="8">
+            <button class="mr-10" nz-button nzType="primary" (click)="search()"><i nz-icon
+                    nzType="search"></i>搜索</button>
+            <button class="mr-10" nz-button (click)="info()"><i nz-icon nzType="exclamation-circle"
+                    nzTheme="outline"></i> 帮助说明</button>
+            <button class="mr-10" nz-button nzType="danger" (click)="creditSearchDisplay = true"><i nz-icon
+                    nzType="file-protect" nzTheme="outline"></i> 添加征信</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="id">ID</th>
+            <th nzLeft="0px" nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="name">姓名</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="multiple_score">征信分数</th>
+            <th nzWidth="200px" nzAlign="left" nzShowSort nzSortKey="id_card_city">籍贯</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="phone">手机号</th>
+            <th nzWidth="200px" nzAlign="left" nzShowSort nzSortKey="ident_number">身份证</th>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="age">年龄</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="mobile_address_city">居住城市</th>
+            <th nzWidth="300px" nzAlign="left">不良记录简报</th>
+            <th nzWidth="300px" nzAlign="left">3个月身份证关联手机号次数</th>
+            <th nzWidth="300px" nzAlign="left">3个月手机号关联身份证次数</th>
+            <th nzWidth="650px" nzAlign="left">明细</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td nzLeft="0px">{{item.name}}</td>
+            <td [ngClass]="{'c_red':item.multiple_score >= 80,'c_orange':(item.multiple_score >= 30 && item.multiple_score < 80),'c_green':(item.multiple_score < 30)}">
+                <b>{{item.multiple_score}}</b> 分
+            </td>
+            <td>{{item.id_card_city}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{secrecy(item.ident_number)}}</td>
+            <td>{{item.age}}</td>
+            <td>{{item.mobile_address_city}}</td>
+            <td>{{item.hit_risk_tagging}}</td>
+            <td>{{item.ident_to_phone_counts}}</td>
+            <td>{{item.phone_to_ident_counts}}</td>
+            <td>
+                <a (click)="creditDetail(item,'creditCourtRiskDetail')">法院执行</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="creditDetail(item,'creditRiskDetail')">风险</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="creditDetail(item,'creditLoanDemandDetail')">近期贷款需求</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="creditDetail(item,'creditLoanFDetail')">近期贷款放款</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="creditDetail(item,'creditLoanSDetail')">近期贷款申请</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="creditDetail(item,'creditHistoryDetail')">历史逾期记录</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-modal
+    [(nzVisible)]="creditSearchDisplay"
+    nzTitle="征信添加"
+    nzOkText="添加"
+    nzCancelText="取消"
+    [nzOkLoading]="loading"
+    (nzOnOk)="creditCreat()"
+    (nzOnCancel)="creditSearchDisplay = false"
+    nzWidth="400"
+>
+    <p><input class="w350" nz-input placeholder="请输入姓名" [(ngModel)]="creditData.name" /></p>
+    <p><input class="w350" nz-input placeholder="请输入身份证号码" [(ngModel)]="creditData.ident_number" /></p>
+    <p><nz-input-number class="w350" nzPlaceHolder="请输入手机号码" [(ngModel)]="creditData.phone"></nz-input-number></p>
+</nz-modal>
+<!-- 征信个人风险明细！ -->
+<nz-drawer
+      [nzClosable]="false"
+      [nzVisible]="creditRiskDetailDisplay"
+      nzPlacement="left"
+      nzTitle="征信个人风险明细"
+      [nzWidth]="600"
+      nzSize="small"
+      (nzOnClose)="close()"
+      *ngIf="currentViewDetail.item !== null && currentViewDetail.type === 'creditRiskDetail'"
+>
+    <nz-descriptions nzBordered nzLayout="vertical">
+        <nz-descriptions-item nzTitle="姓名">{{currentViewDetail.item.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{currentViewDetail.item.phone}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="车辆租赁违约名单">{{currentViewDetail.content.carRentalBreakContractList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="户籍位于高风险集中地区">{{currentViewDetail.content.censusRegisterHignRiskArea}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="法院失信名单">{{currentViewDetail.content.courtBreakFaithList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="法院结案名单">{{currentViewDetail.content.courtCaseList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="法院执行名单">{{currentViewDetail.content.courtExecuteList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="信贷逾期名单">{{currentViewDetail.content.creditOverdueList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="犯罪通缉名单">{{currentViewDetail.content.crimeManhuntList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="高风险关注名单">{{currentViewDetail.content.hignRiskFocusList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="欠税公司法人代表名单">{{currentViewDetail.content.owingTaxesLegalPersonList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="欠税名单">{{currentViewDetail.content.owingTaxesList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="个人欺诈黑名单">{{currentViewDetail.content.personalFraudBlacklist}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="通信小号库">{{currentViewDetail.content.smallNumberBase}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="助学贷款欠费历史">{{currentViewDetail.content.studentLoanArrearageList}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="虚拟号码库">{{currentViewDetail.content.virtualNumberBase}}</nz-descriptions-item>
+    </nz-descriptions>
+</nz-drawer>
+<!-- 征信个人近期贷款需求明细！ -->
+<nz-drawer
+      [nzClosable]="false"
+      [nzVisible]="creditLoanDemandDetailDisplay"
+      nzPlacement="left"
+      nzTitle="征信个人近期贷款需求明细"
+      [nzWidth]="650"
+      nzSize="small"
+      (nzOnClose)="close()"
+      *ngIf="currentViewDetail.item !== null && currentViewDetail.type === 'creditLoanDemandDetail'"
+>
+    <nz-descriptions nzBordered nzLayout="vertical">
+        <nz-descriptions-item nzTitle="姓名">{{currentViewDetail.item.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{currentViewDetail.item.phone}}</nz-descriptions-item>
+    </nz-descriptions>
+
+    <nz-descriptions nzBordered nzLayout="vertical" *ngFor="let item of currentViewDetail.content" class="mt-10">
+        <nz-descriptions-item nzTitle="一定周期内申请人在平台申请借款数">{{item.wxType}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="信用卡">{{item.creditCard}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="一般消费分期平台">{{item.commonAmortizePlatform}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="大型消费金融公司">{{item.largeFinancePlatform}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="小额贷款公司">{{item.pettyLoanPlatform}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="P2P平台">{{item.p2pPlatform}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="其它类型贷款公司">{{item.otherPlatform}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="贷款需求总数">{{item.platformTotal}}</nz-descriptions-item>
+    </nz-descriptions>
+</nz-drawer>
+<!-- 征信个人近期贷款放款明细！ -->
+<nz-drawer
+      [nzClosable]="false"
+      [nzVisible]="creditLoanFDetailDisplay"
+      nzPlacement="left"
+      nzTitle="征信个人近期贷款放款明细"
+      [nzWidth]="650"
+      nzSize="small"
+      (nzOnClose)="close()"
+      *ngIf="currentViewDetail.item !== null && currentViewDetail.type === 'creditLoanFDetail'"
+>
+    <nz-descriptions nzBordered nzLayout="vertical">
+        <nz-descriptions-item nzTitle="姓名">{{currentViewDetail.item.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{currentViewDetail.item.phone}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="消费分期类放款机构数">{{currentViewDetail.content.cflenders}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="最近一次距今天数">{{currentViewDetail.content.distanceNowDays}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近1个月放款次数">{{currentViewDetail.content.lendNumber1}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近3个月放款次数">{{currentViewDetail.content.lendNumber3}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月放款次数">{{currentViewDetail.content.lendNumber6}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="最近一次贷款时间">{{currentViewDetail.content.lendTime | date:'yyyy-MM-dd HH:mm:ss'}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近12个月放款机构总数">{{currentViewDetail.content.lenders}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="贷款时长">{{currentViewDetail.content.loanday}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="网络贷款类放款机构数">{{currentViewDetail.content.nllenders}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近1个月还款失败次数">{{currentViewDetail.content.repayFail1}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近12个月还款失败次数">{{currentViewDetail.content.repayFail12}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近1个月还款成功次数">{{currentViewDetail.content.repaySucc1}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近12个月还款成功次数">{{currentViewDetail.content.repaySucc12}}</nz-descriptions-item>
+    </nz-descriptions>
+</nz-drawer>
+<!-- 征信个人近期贷款申请明细！ -->
+<nz-drawer
+      [nzClosable]="false"
+      [nzVisible]="creditLoanSDetailDisplay"
+      nzPlacement="left"
+      nzTitle="征信个人近期贷款申请明细"
+      [nzWidth]="650"
+      nzSize="small"
+      (nzOnClose)="close()"
+      *ngIf="currentViewDetail.item !== null && currentViewDetail.type === 'creditLoanSDetail'"
+>
+    <nz-descriptions nzBordered nzLayout="vertical">
+        <nz-descriptions-item nzTitle="姓名">{{currentViewDetail.item.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{currentViewDetail.item.phone}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近12个月申请机构总数">{{currentViewDetail.content.applyMechanismNumber}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近1个月申请次数">{{currentViewDetail.content.applyTime1}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近3个月申请次数">{{currentViewDetail.content.applyTime3}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月申请次数">{{currentViewDetail.content.applyTime6}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近12个月申请次数">{{currentViewDetail.content.applyTime12}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="消费分期类申请机构数">{{currentViewDetail.content.consumerApplyMechanismNumber}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="距离最近一次申请日期的天数">{{currentViewDetail.content.distanceNowDays}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="最近一次申请日期">{{currentViewDetail.content.lastApplyTime}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="网络贷款类申请机构数">{{currentViewDetail.content.networkLoanApplyMechanisMnumber}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="是否查得">{{currentViewDetail.content.type === 'Y' ?  '是' : '否'}}</nz-descriptions-item>
+    </nz-descriptions>
+</nz-drawer>
+<!-- 征信个人历史逾期记录明细！ -->
+<nz-drawer
+      [nzClosable]="false"
+      [nzVisible]="creditHistoryDetailDisplay"
+      nzPlacement="left"
+      nzTitle="征信个人历史逾期记录明细"
+      [nzWidth]="650"
+      nzSize="small"
+      (nzOnClose)="close()"
+      *ngIf="currentViewDetail.item !== null && currentViewDetail.type === 'creditHistoryDetail'"
+>
+    <nz-descriptions nzBordered nzLayout="vertical">
+        <nz-descriptions-item nzTitle="姓名">{{currentViewDetail.item.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="手机号">{{currentViewDetail.item.phone}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月逾期机构总数">{{currentViewDetail.content.overdueMechanismNumber}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月逾期总次数">{{currentViewDetail.content.overdueTotalCounts}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月逾期总金额（元）">{{currentViewDetail.content.overdueTotalMoney}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="近6个月未结清逾期次数">{{currentViewDetail.content.unclearedCounts}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="逾期标志">{{currentViewDetail.content.yuqiBoolean}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="是否查得">{{currentViewDetail.content.type === 'Y' ?  '是' : '否'}}</nz-descriptions-item>
+    </nz-descriptions>
+</nz-drawer>

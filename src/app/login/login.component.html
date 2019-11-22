@@ -1,0 +1,32 @@
+
+<div id="login-column">
+    <nz-spin [nzSpinning]="isSpinning">
+        <div id="web-logo">
+            <img src="assets/images/logo.png" />
+        </div>
+        <nz-input-group [nzPrefix]="user">
+            <input type="text" nz-input placeholder="请输入用户名" [(ngModel)]="inner_userName" />
+        </nz-input-group>
+        <ng-template #user><i nz-icon nzType="user"></i></ng-template>
+        <nz-input-group [nzPrefix]="password">
+            <input type="password" nz-input placeholder="请输入密码" [(ngModel)]="inner_password" />
+        </nz-input-group>
+        <ng-template #password><i nz-icon nzType="lock"></i></ng-template>
+        <div nz-row id="option">
+            <div nz-col nzSpan="12">
+                <label nz-checkbox [(ngModel)]="isSaveLoginInfo" (ngModelChange)="cancelSaveUserInfo()">
+                    <span>记住密码</span>
+                </label>
+            </div>
+            <div nz-col nzSpan="12" class="login-form-forgot">
+                <a>忘记密码?</a>
+            </div>
+        </div>
+        <button nz-button nzType="primary" nzBlock (click)="login()">
+            <i nz-icon nzType="login"></i> 登录
+        </button>
+    </nz-spin>
+</div>
+<div id="other-info">
+    Powered by 租得趣 © 2019.  代码授权: Jone-danny. 当前版本: 1.0.0-build
+</div>

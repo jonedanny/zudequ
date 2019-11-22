@@ -1,0 +1,94 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    background: url('/assets/images/login-bg.png') 100% 100% no-repeat;
+    background-size: cover;
+    font-size: 14px;
+    min-width: 1280px;
+    min-height: 880px;
+}
+.gutter-box {
+    background: #00a0e9;
+    padding: 5px 0;
+}
+.table-operations {
+    margin-bottom: 15px;
+}
+.w100p {
+    width: 100%;
+}
+.w120 {
+    width: 120px !important;
+}
+.w140 {
+    width: 140px !important;
+}
+.w160 {
+    width: 160px !important;
+}
+.w185 {
+    width: 185px !important;
+}
+.w200 {
+    width: 200px !important;
+}
+.w230 {
+    width: 230px !important;
+}
+.w300 {
+    width: 300px !important;
+}
+.w350 {
+    width: 350px !important;
+}
+.w410 {
+    width: 410px !important;
+}
+.w450 {
+    width: 450px;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+.mr-10 {
+    margin-right: 10px;
+}
+.ellipsis {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+.c_red {
+    color: red;
+}
+.c_green {
+    color: green;
+}
+.c_orange {
+    color: orange;
+}
+.c_grey {
+    color: #999;
+}
+select.multiple {
+    width: 100%;
+    height: 100% !important;
+}
+app-data-overview {
+    #calc-col .ant-card-body {
+        height: 190px;
+        overflow-y: hidden;
+        margin: 24px;
+        padding: 5px 0 0 0;
+    }
+}
+.ant-cascader-menu {
+    height: 300px;
+}
+.ant-descriptions-item-label {
+    vertical-align: top;
+}

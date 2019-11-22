@@ -1,0 +1,96 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input placeholder="请输入用户手机号" [(ngModel)]="fillterData.username" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="id">ID</th>
+            <th nzWidth="200px" nzAlign="left" nzShowSort nzSortKey="username">用户名</th>
+            <th nzWidth="100px" nzAlign="left" nzShowSort nzSortKey="coins">趣币</th>
+            <th nzWidth="200px" nzAlign="left" nzShowSort nzSortKey="register_time">注册时间</th>
+            <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="lease">租赁总次数</th>
+            <th nzWidth="200px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.coins}}</td>
+            <td>{{item.register_time}}</td>
+            <td>{{item.lease}}</td>
+            <td nzRight="0px">
+                <a (click)="showQbModifyColumn(item)"><i nz-icon nzType="google-plus" nzTheme="outline"></i> 添加/减少 趣币</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="searchUserQbHistory(item)">明细</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-modal
+    [(nzVisible)]="qbModifyDisplay"
+    nzTitle="趣币修改"
+    nzOkText="确定"
+    nzCancelText="取消"
+    [nzOkLoading]="loading"
+    (nzOnOk)="qbModify()"
+    (nzOnCancel)="qbModifyDisplay = false"
+    nzWidth="400"
+>
+    <p>ID：{{operation.id}} - {{operation.username}}</p>
+    <p>
+        来源：
+        <nz-select [(ngModel)]="operation.resource" class="w200">
+            <nz-option nzValue="0" nzLabel="无"></nz-option>
+            <nz-option nzValue="1" nzLabel="支付宝"></nz-option>
+            <nz-option nzValue="2" nzLabel="淘宝"></nz-option>
+            <nz-option nzValue="3" nzLabel="微信"></nz-option>
+            <nz-option nzValue="4" nzLabel="租得趣"></nz-option>
+        </nz-select>
+    </p>
+    <p>
+        趣币： <i nz-icon nzType="copyright" nzTheme="twotone"></i> {{operation.coins}}
+        &nbsp;&nbsp;
+        实付 <i nz-icon nzType="property-safety" nzTheme="twotone"></i> {{operation.pay}}
+    </p>
+    <p>
+        <nz-radio-group [(ngModel)]="operation.action">
+            <label nz-radio-button nzValue="0"><span>增加</span></label>
+            <label nz-radio-button nzValue="1"><span>减少</span></label>
+        </nz-radio-group>
+    </p>
+    <p>
+        <nz-input-group nzCompact>
+            <nz-input-number [(ngModel)]="operation.value" [nzStep]="1" nzPlaceHolder="趣币数量" title="趣币数量" (ngModelChange)="innerPay()" (keyup)="innerPay()" (nzBlur)="innerPay()"></nz-input-number>
+            <nz-input-number [(ngModel)]="operation.deduction" [nzStep]="1" nzPlaceHolder="抵扣" title="抵扣"></nz-input-number>
+        </nz-input-group>
+    </p>
+    <p><input class="w350" nz-input placeholder="请输入备注" [(ngModel)]="operation.reason" /></p>
+</nz-modal>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="visible"
+    nzPlacement="left"
+    [nzWidth]="400"
+    nzTitle="趣币明细"
+    (nzOnClose)="visible = false"
+>
+    <p *ngFor="let item of currentQbHistory" class="hsitory-qb">
+        <span>时间: {{item.creat_time}}</span>
+        <span>相关租赁单ID: {{item.order_id}}</span>
+        <span>操作: {{item.action === '0' ? '增加' : '减少'}}</span>
+        <span>数量: {{item.value}}</span>
+        <span>原因: {{item.reason}}</span>
+    </p>
+    <nz-empty *ngIf="currentQbHistory === null || currentQbHistory.length === 0"></nz-empty>
+</nz-drawer>

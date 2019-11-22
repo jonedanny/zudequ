@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<style>
+		table {
+			width: 100%;
+			border: 1px solid #666;
+			border-collapse: collapse;
+		}
+
+		td {
+			padding: 5px;
+			border: 1px solid #666;
+		}
+	</style>
+</head>
+<body></body>
+<script>
+	var data = JSON.parse(sessionStorage.getItem("print_content"));
+	console.log(data)
+	var optionHtml = "",userHtml = "";
+	var optionArr = data.p_name.split(',');
+	var isBackArr = data.is_back.split(',');
+	var isSellArr = data.is_sell.split(',');
+	for (var i = 0, r = optionArr.length; i < r; i++) {
+		var isBack = isBackArr[i] === '1' ? '[已归还]' : '';
+		var isSell = isSellArr[i] === '1' ? '[已买断]' : '';
+		optionHtml += optionArr[i] + isBack + isSell + "<br/>";
+	}
+	var leaaseRelativeArr = data.userName.split(',');
+	leaaseRelativeArr = Array.from(new Set(leaaseRelativeArr));
+	for (var i = 0, r = leaaseRelativeArr.length; i < r; i++) {
+		userHtml += "[" + leaaseRelativeArr[i] + "]&nbsp;&nbsp;";
+	}
+	var table = "<table>\
+		<tr><td align='right' width='40%'>货单ID: </td><td width='60%'>"+ data.id + "</td></tr>\
+		<tr><td align='right'>付款途径: </td><td>"+ data.origin + "</td></tr>\
+		<tr><td align='right'>金额: </td><td>"+ data.money + "</td></tr>\
+		<tr><td align='right'>押金: </td><td>"+ data.deposit + "</td></tr>\
+		<tr><td align='right'>起始日: </td><td>"+ data.start + "</td></tr>\
+		<tr><td align='right'>结束日: </td><td>"+ data.end + "</td></tr>\
+		<tr><td align='right'>配置: </td><td>"+ optionHtml + "</td></tr>\
+		<tr><td align='right'>店铺: </td><td>"+ data.store + "</td></tr>\
+		<tr><td align='right'>操作员: </td><td>"+ data.opteration + "</td></tr>\
+		<tr><td align='right'>备注: </td><td>"+ data.des + "</td></tr>\
+		<tr><td align='right'>相关租赁人: </td><td>"+ userHtml + "</td></tr>\
+		<tr><td align='right'>趣币会员: </td><td>"+ data.phone + "</td></tr>\
+	</table>";
+	document.write(table);
+	window.print();
+</script>
+
+</html>
