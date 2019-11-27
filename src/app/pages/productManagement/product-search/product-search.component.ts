@@ -91,7 +91,9 @@ export class ProductSearchComponent implements OnInit {
 		this.leaseHistory = true;
 		this.leaseHistoryTitle = item.name;
 		this.Requset.post$('devicemanager/getDeviceLeaseHistory',{id: item.id}).subscribe(res => {
-			this.leaseHistoryList = res.content;
+			if(res) {
+				this.leaseHistoryList = res.content;
+			}
 		});
 	}
 	// 保存设备修改信息

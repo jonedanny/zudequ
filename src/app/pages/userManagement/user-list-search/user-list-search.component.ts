@@ -43,9 +43,10 @@ export class UserListSearchComponent implements OnInit {
 	searchData() {
 		this.loading = true;
 		this.Requset.post$('usermanager/customerUser', this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
-			console.log(res.content)
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}

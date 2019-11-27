@@ -17,7 +17,7 @@ export class CommonDataService {
 	productClassify = { a: [], b: [], c: [] }; // 商品分类 数据
 	departmentList = []; // 部门列表
 	adminList = []; // 管理员列表
-	userInfo = {}; // 登录用户信息
+	userInfo = null; // 登录用户信息
 
 	// 获取设备列表
 	getDeviceList(userId: string = ''): Observable<any> {

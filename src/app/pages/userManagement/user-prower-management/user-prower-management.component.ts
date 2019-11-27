@@ -37,8 +37,10 @@ export class UserProwerManagementComponent implements OnInit {
 	searchData() {
 		this.loading = true;
 		this.Requset.post$('usermanager/managerUser', this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			console.log(res.content)
 			this.loading = false;
 		});

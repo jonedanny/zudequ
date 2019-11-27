@@ -74,8 +74,10 @@ export class UserCreditSearchComponent implements OnInit {
 	searchData() {
 		this.loading = true;
 		this.Requset.post$('usercreditmanager/searchCustomerUserCredit', this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}

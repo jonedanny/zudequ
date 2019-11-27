@@ -51,9 +51,10 @@ export class QbEidtComponent implements OnInit {
 	searchData() {
 		this.loading = true;
 		this.Requset.post$('qbmodifymanager/searchCustomerUserForCoins', this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
-			console.log(res.content)
+			if(res){
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}
@@ -79,19 +80,22 @@ export class QbEidtComponent implements OnInit {
 		}
 		this.loading = true;
 		this.Requset.post$('qbmodifymanager/modifyQbNumber', this.operation).subscribe(res => {
-			this.message.success('修改成功');
+			if(res){
+				this.message.success('修改成功');
+				this.searchData();
+			}
 			this.loading = false;
 			this.qbModifyDisplay = false;
-			this.searchData();
 		});
 	}
 	// 查询用户历史趣币修改
 	searchUserQbHistory(item) {
 		this.loading = true;
 		this.Requset.post$('qbmodifymanager/searchUserQbHistory', {username: item.username}).subscribe(res => {
-			console.log(res);
+			if(res) {
+				this.currentQbHistory = res.content.reverse();
+			}
 			this.visible = true;
-			this.currentQbHistory = res.content.reverse();
 			this.loading = false;
 		});
 	}

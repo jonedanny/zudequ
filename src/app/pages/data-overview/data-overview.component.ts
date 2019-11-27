@@ -102,15 +102,17 @@ export class DataOverviewComponent implements OnInit {
 	getAllcustomer() {
 		this.customerTotal = 0;
 		this.common.getCustomerList$(this.start, this.end).subscribe(res => {
-			const data = res.content;
-			// console.log('[查询所有客户]', data);
-			for (let i = 0, r = data.length; i < r; i++) {
-				this.customerCalcEchartsData.days.push(data[i].days);
-				this.customerCalcEchartsData.count.push(data[i].COUNT);
-				this.customerTotal += Number(data[i].COUNT);
+			if(res) {
+				const data = res.content;
+				// console.log('[查询所有客户]', data);
+				for (let i = 0, r = data.length; i < r; i++) {
+					this.customerCalcEchartsData.days.push(data[i].days);
+					this.customerCalcEchartsData.count.push(data[i].COUNT);
+					this.customerTotal += Number(data[i].COUNT);
+				}
+				console.log(this.customerCalcEchartsData)
+				this.drawCharts();
 			}
-			console.log(this.customerCalcEchartsData)
-			this.drawCharts();
 		});
 	}
 	// 客户时间过滤

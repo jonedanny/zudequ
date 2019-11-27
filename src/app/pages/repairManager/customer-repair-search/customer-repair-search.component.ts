@@ -33,8 +33,10 @@ export class CustomerRepairSearchComponent implements OnInit {
 	search() {
 		this.loading = true;
 		this.Requset.post$('repair/searchCustomerApply',this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}

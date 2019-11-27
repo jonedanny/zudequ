@@ -57,7 +57,13 @@ export class LoginComponent implements OnInit {
                     localStorage.setItem('userInfo',JSON.stringify(data));
                 }
                 this.common.userInfo = res.content[0];
+
+                // 记住用户信息
                 localStorage.setItem('userLoginInfo',JSON.stringify(this.common.userInfo));
+
+                // 登陆后设置请求token
+                this.Requset.setHeaderToken(this.common.userInfo.token);
+
                 this.router.navigate(['main-container']);                
             }
         });

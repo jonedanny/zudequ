@@ -54,8 +54,10 @@ export class OrderFinishSearchComponent implements OnInit {
 	search() {
 		this.loading = true;
 		this.Requset.post$('ordermanager/searchOrderList',this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}

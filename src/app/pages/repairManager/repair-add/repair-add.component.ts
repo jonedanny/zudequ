@@ -56,9 +56,11 @@ export class RepairAddComponent implements OnInit {
 		}
 		this.isSpinning = true;
 		this.Requset.post$('repair/addRepairInfo',this.postData).subscribe(res => {
+			if(res){
+				this.postData = JSON.parse(JSON.stringify(this.postDataCopy));
+				this.message.success('创建维修单成功');
+			}
 			this.isSpinning = false;
-			this.postData = JSON.parse(JSON.stringify(this.postDataCopy));
-			this.message.success('创建维修单成功');
 		});
 	}
 }

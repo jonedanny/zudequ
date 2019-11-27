@@ -58,7 +58,16 @@
 </div>
 <div id="user-calc">
     <nz-card nzTitle="用户量统计 ({{customerTotal}})" [nzExtra]="userCalc">
-        <div echarts [options]="chartOption" class="customer-calc"></div>
+        <div echarts [options]="chartOption" class="customer-calc" *ngIf="userLoginInfo.author >= 2"></div>
+        <nz-empty
+            [nzNotFoundImage]="'https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'"
+            [nzNotFoundContent]="contentTpl"
+            *ngIf="userLoginInfo.author < 2"
+        >
+            <ng-template #contentTpl>
+                <span>对不起，您没有相关查看该模块的权限!!!</span>
+            </ng-template>
+        </nz-empty>
     </nz-card>
     <ng-template #userCalc>
         <nz-range-picker

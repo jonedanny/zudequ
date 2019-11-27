@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, retry, timeout } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -15,16 +15,25 @@ export class RequsetService {
 	classA = []; // 分类A
 	classB = []; // 分类B
 	classC = []; // 分类C
-
+	headers = null; // 头部求情信息
 	constructor(
 		private message: NzMessageService,
 		private http: HttpClient
 	) {
+		if(localStorage.getItem('userLoginInfo')){
+			this.headers = new HttpHeaders().set("author", JSON.parse(localStorage.getItem('userLoginInfo')).token);
+		}
+	}
 
+	/**
+	 * 改变头部验证
+	 */
+	setHeaderToken(token) {
+		this.headers = new HttpHeaders().set("author", token);
 	}
 
 	get$(url): Observable<any> {
-		return this.http.get(this.baseUrl + url).pipe(
+		return this.http.get(this.baseUrl + url,{headers: this.headers}).pipe(
 			map((res): any => {
 				return res;
 			})
@@ -32,7 +41,7 @@ export class RequsetService {
 	}
 
 	local_get$(url): Observable<any> {
-		return this.http.get(url).pipe(
+		return this.http.get(url,{headers: this.headers}).pipe(
 			map((res): any => {
 				return res;
 			})
@@ -40,7 +49,7 @@ export class RequsetService {
 	}
 
 	post$(url,data): Observable<any> {
-		return this.http.post(this.baseUrl + url,data).pipe(
+		return this.http.post(this.baseUrl + url,data,{headers: this.headers}).pipe(
 			map((res): any => {
 				return this.handel(res);
 			})

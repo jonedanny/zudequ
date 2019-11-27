@@ -173,6 +173,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 		}
 		this.isSpinning = true;
 		this.Requset.post$('productmanager/addTopClassify', this.modalData).subscribe(res => {
+			if(!res) return;
 			this.message.success('添加成功');
 			this.modalData = JSON.parse(JSON.stringify(this.modalDataCopy));
 			this.refreshClassify();
@@ -194,6 +195,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 				department: this.classifyEditData.department
 			}
 			this.Requset.post$('productmanager/addSecondClassify', data).subscribe(res => {
+				if(!res) return;
 				this.message.success('添加成功');
 				this.subClassifuName = '';
 				this.refreshClassify();
@@ -207,6 +209,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 				department: this.classifyEditData.department
 			}
 			this.Requset.post$('productmanager/addThirdClassify', data).subscribe(res => {
+				if(!res) return;
 				this.message.success('添加成功');
 				this.subClassifuName = '';
 				this.refreshClassify();
@@ -222,8 +225,11 @@ export class ProductClassifyManagementComponent implements OnInit {
 			level: this.classifyEditData.level
 		}
 		this.Requset.post$('productmanager/modifyName', data).subscribe(res => {
-			this.message.success('修改成功');
-			this.refreshClassify();
+			if(res) {
+				this.message.success('修改成功');
+				this.refreshClassify();
+			}
+
 		});
 	}
 	// 删除分类
@@ -235,7 +241,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 		}
 		// 查询改分类下是否有商品
 		this.Requset.post$('productmanager/hasProductOfClassify', data).subscribe(res => {
-			console.log(res)
+			if(!res) return;
 			if (res.content.length > 0) {
 				this.message.error(`该分类下有${res.content.length}个商品,请删除商品后再尝试`);
 				return;

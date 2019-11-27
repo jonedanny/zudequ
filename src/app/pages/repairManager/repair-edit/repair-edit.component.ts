@@ -44,8 +44,10 @@ export class RepairEditComponent implements OnInit {
 	search() {
 		this.loading = true;
 		this.Requset.post$('repair/searchApplyList',this.fillterData).subscribe(res => {
-			this.result = res.content;
-			this.total = res.total;
+			if(res) {
+				this.result = res.content;
+				this.total = res.total;
+			}
 			this.loading = false;
 		});
 	}
@@ -78,10 +80,12 @@ export class RepairEditComponent implements OnInit {
 	save() {
 		this.loading = true;
 		this.Requset.post$('repair/modifyRepairInfo',this.selectData).subscribe(res => {
+			if(res){
+				this.message.success('修改成功');
+				this.search();
+			}
 			this.visible = false;
 			this.loading = false;
-			this.message.success('修改成功');
-			this.search();
 		});
 	}
 	// 完成维修单
@@ -99,10 +103,12 @@ export class RepairEditComponent implements OnInit {
 	completeRepair() {
 		this.loading = true;
 		this.Requset.post$('repair/finiedRepairOrder',{id: this.chooseId}).subscribe(res => {
+			if(res) {
+				this.message.success(`维修单 ID:${this.chooseId} 已完成`);
+				this.search();
+			}
 			this.displayCompleteColumn = false;
 			this.loading = false;
-			this.message.success(`维修单 ID:${this.chooseId} 已完成`);
-			this.search();
 		});
 	}
 	// 系统管理员 ID -> name
