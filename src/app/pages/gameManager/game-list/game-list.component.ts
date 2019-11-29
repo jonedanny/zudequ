@@ -3,12 +3,13 @@ import { RequsetService } from '../../../service/requset.service';
 import { CommonDataService } from '../../../service/common-data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
+
 @Component({
-  selector: 'app-customer-repair-search',
-  templateUrl: './customer-repair-search.component.html',
-  styleUrls: ['./customer-repair-search.component.scss']
+  selector: 'app-game-list',
+  templateUrl: './game-list.component.html',
+  styleUrls: ['./game-list.component.scss']
 })
-export class CustomerRepairSearchComponent implements OnInit {
+export class GameListComponent implements OnInit {
 
 	constructor(
 		public common: CommonDataService,
@@ -16,15 +17,17 @@ export class CustomerRepairSearchComponent implements OnInit {
 		private Requset: RequsetService
   ) { }
   
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1700px' };
+	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1500px' };
+	baseImgUrl = location.href.indexOf('http://localhost') !== -1 ? 'http://127.0.0.1/ZdpPhpManager/' : 'http://122.114.177.171:8006/ZdpPhpManager/';
 	result = []; // 查询结果
 	loading = true;
 	total = 0;
 	fillterData = {
 		page: 1,
 		rows: 25,
-		repairID: '',
-		taobaoID: ''
+		name: '',
+		type: '',
+		classify: ''
 	};
 	ngOnInit() {
 		this.search();
@@ -32,7 +35,7 @@ export class CustomerRepairSearchComponent implements OnInit {
 	// 过滤搜索
 	search() {
 		this.loading = true;
-		this.Requset.post$('repair/searchCustomerApply',this.fillterData).subscribe(res => {
+		this.Requset.post$('gamemanager/searchGameList',this.fillterData).subscribe(res => {
 			if(res) {
 				this.result = res.content;
 				this.total = res.total;
@@ -40,4 +43,5 @@ export class CustomerRepairSearchComponent implements OnInit {
 			this.loading = false;
 		});
 	}
+
 }

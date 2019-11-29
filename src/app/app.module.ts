@@ -39,6 +39,13 @@ import { RepairAddComponent } from './pages/repairManager/repair-add/repair-add.
 import { RepairEditComponent } from './pages/repairManager/repair-edit/repair-edit.component';
 import { CustomerRepairSearchComponent } from './pages/repairManager/customer-repair-search/customer-repair-search.component';
 
+import { SellCreatComponent } from './pages/sellManager/sell-creat/sell-creat.component';
+import { SoldDeviceListComponent } from './pages/sellManager/sold-device-list/sold-device-list.component';
+
+import { GameAddComponent } from './pages/gameManager/game-add/game-add.component';
+import { GameListComponent } from './pages/gameManager/game-list/game-list.component';
+import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/game-option-edit.component';
+
 
 registerLocaleData(zh);
 
@@ -62,7 +69,12 @@ registerLocaleData(zh);
 		LeaseInfoViewComponent,
 		RepairAddComponent,
 		RepairEditComponent,
-		CustomerRepairSearchComponent
+		CustomerRepairSearchComponent,
+		SellCreatComponent,
+		SoldDeviceListComponent,
+		GameAddComponent,
+		GameListComponent,
+		GameOptionEditComponent
 	],
 	imports: [
 		BrowserModule,

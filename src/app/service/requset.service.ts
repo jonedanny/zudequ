@@ -21,7 +21,7 @@ export class RequsetService {
 		private http: HttpClient
 	) {
 		if(localStorage.getItem('userLoginInfo')){
-			this.headers = new HttpHeaders().set("author", JSON.parse(localStorage.getItem('userLoginInfo')).token);
+			this.headers = new HttpHeaders().set("Author", JSON.parse(localStorage.getItem('userLoginInfo')).token);
 		}
 	}
 

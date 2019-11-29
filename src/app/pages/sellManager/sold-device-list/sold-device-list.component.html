@@ -1,0 +1,44 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.name" placeholder="商品名" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.user" placeholder="购买人" />
+        </div>
+        <div nz-col nzSpan="3">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="100px">ID</th>
+            <th nzWidth="300px" nzLeft="0px">商品名称</th>
+            <th nzWidth="200px">产品序列号</th>
+            <th nzWidth="100px">保修</th>
+            <th nzWidth="100px">价格</th>
+            <th nzWidth="200px">销售日期</th>
+            <th nzWidth="200px">购买用户</th>
+            <th nzWidth="100px">操作人</th>
+            <th nzWidth="400px">备注</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td nzLeft="0px">{{item.name}}</td>
+            <td>{{item.sku}}</td>
+            <td>{{item.guarantee}}</td>
+            <td>{{item.price}}</td>
+            <td>{{item.creat_time}}</td>
+            <td>{{item.user}}</td>
+            <td>{{item.operater}}</td>
+            <td>{{item.des}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

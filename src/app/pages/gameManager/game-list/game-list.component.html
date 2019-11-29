@@ -1,0 +1,49 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.name" placeholder="游戏名" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.type" placeholder="游戏类型" />
+        </div>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.classify" placeholder="游戏分类" />
+        </div>
+        <div nz-col nzSpan="3">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="100px">ID</th>
+            <th nzWidth="100px">封面</th>
+            <th nzWidth="400px">游戏名</th>
+            <th nzWidth="200px">分类</th>
+            <th nzWidth="200px">类型</th>
+            <th nzWidth="100px">容量</th>
+            <th nzWidth="400px">备注</th>
+            <th nzWidth="200px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td><img class="w70" [src]="baseImgUrl + item.img" /></td>
+            <td>{{item.name}}</td>
+            <td>{{item.classify}}</td>
+            <td>{{item.type}}</td>
+            <td>{{item.container}} G</td>
+            <td>{{item.des}}</td>
+            <td nzRight="0px">
+                <a>编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a>删除</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

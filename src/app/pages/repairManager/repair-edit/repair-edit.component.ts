@@ -16,7 +16,7 @@ export class RepairEditComponent implements OnInit {
 		private Requset: RequsetService
   ) { }
   
-	tableScroll = { y: `${document.body.clientHeight - 400}px`, x: '3550px' };
+	tableScroll = { y: `${document.body.clientHeight -330}px`, x: '3550px' };
 	visible: boolean = false;
 	displayCompleteColumn: boolean = false;
 	adminList; // 管理员列表

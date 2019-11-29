@@ -19,7 +19,7 @@ export class UserProwerManagementComponent implements OnInit {
 	) { }
 	confirmModal: NzModalRef;
 	
-	tableScroll = { y: `${document.body.clientHeight - 400}px`, x: '950px' };
+	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '950px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;

@@ -16,7 +16,6 @@ export class OrderCreatComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 
-	departmentList; // 部门列表
 	adminList; // 管理员列表
 	productClassify; // 商品分类 数据
 	userLoginInfo = JSON.parse(localStorage.getItem('userLoginInfo'));
@@ -27,7 +26,7 @@ export class OrderCreatComponent implements OnInit {
 	storeList = []; // 店铺来源列表
 
 	textInfo = {
-		department: null,
+		department: '1',
 		name: '',
 		classify_a: '',
 		classify_b: '',
@@ -60,12 +59,12 @@ export class OrderCreatComponent implements OnInit {
 
 	ngOnInit() {
 		this.common.initData(() => {
-			this.departmentList = this.common.departmentList;
 			this.productClassify = this.common.productClassify;
 			this.storeList = this.common.store;
 			this.adminList = this.common.adminList;
 			console.log(this.adminList);
 			this.refreshClassify();
+			this.refreshProList();
 		});
 	}
 	// 刷新分类数据
@@ -129,10 +128,6 @@ export class OrderCreatComponent implements OnInit {
 		}
 		this.refreshProList();
 	}
-	// 更改部门
-	changeDepartment() {
-		this.refreshProList();
-	}
 	// 创建订单
 	submitForm() {
 		if(this.validate()) {
@@ -172,6 +167,7 @@ export class OrderCreatComponent implements OnInit {
 			this.Requset.post$('javacontact/javaContact',{data: JSON.stringify(data)}).subscribe(res => {
 				this.isSpinning = false;
 				this.textInfo = JSON.parse(JSON.stringify(this.textInfoCopy));
+				this.refreshProList();
 				this.leaseDay = null;
 				this.message.success('创建订单成功');
 			});
@@ -212,7 +208,7 @@ export class OrderCreatComponent implements OnInit {
 	orderTimeChange(result: Date): void {
 		this.textInfo.start = this.common.formatNormalTime(result);
 	}
-	// 刷新刷新订单商品
+	// 刷新订单商品
 	refreshProList() {
 		this.isSpinning = true;
 		let count = 0;

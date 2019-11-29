@@ -1,0 +1,54 @@
+<form nz-form>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>部门</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            销售部
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>操作员</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            {{textInfo.operater}}
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>商品序列号</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input class="w350" nz-input placeholder="请输入商品序列号" name="sku" [(ngModel)]="textInfo.sku" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>商品名称</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input class="w350" nz-input placeholder="请输入商品名称" name="name" [(ngModel)]="textInfo.name" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>购买人</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <input class="w350" nz-input placeholder="请输入购买人" name="user" [(ngModel)]="textInfo.user" />
+        </nz-form-control>
+        <nz-form-label [nzSpan]="3" nzRequired>商品价格</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-input-number class="w350" [(ngModel)]="textInfo.price" name="price"></nz-input-number>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3" nzRequired>保修</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+            <nz-select class="w350" [(ngModel)]="textInfo.guarantee" nzAllowClear nzPlaceHolder="请选择保修时间" name="guarantee">
+                <nz-option nzValue="半年" nzLabel="半年"></nz-option>
+                <nz-option nzValue="1年" nzLabel="1年"></nz-option>
+                <nz-option nzValue="2年" nzLabel="2年"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="3">备注</nz-form-label>
+        <nz-form-control [nzSpan]="21">
+            <textarea nz-input placeholder="请输入备注" [nzAutosize]="{ minRows: 4, maxRows: 8 }" name="des" [(ngModel)]="textInfo.des">
+            </textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control [nzXs]="{ span: 21, offset: 3 }">
+            <button nz-button nzType="primary" [nzLoading]="isSpinning" (click)="submitForm()">生成销售单</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

@@ -16,7 +16,7 @@ export class LeaseInfoViewComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 	
-	tableScroll = {y: `${document.body.clientHeight - 400}px`, x: '1730px'};
+	tableScroll = {y: `${document.body.clientHeight - 330}px`, x: '1730px'};
 	dateFormat = 'yyyy/MM/dd';
 	result = []; // 查询结果
 	adminList; // 管理员列表

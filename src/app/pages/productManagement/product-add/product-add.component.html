@@ -1,15 +1,6 @@
 <nz-spin [nzSpinning]="isSpinning">
     <form nz-form (ngSubmit)="submit()">
         <nz-form-item>
-            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>选择部门</nz-form-label>
-            <nz-form-control [nzSpan]="12">
-                <nz-select class="w160" nzAllowClear nzPlaceHolder="请选择部门" [(ngModel)]="chooseInfo.department" name="department">
-                    <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
-                    </nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
             <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>选择分类</nz-form-label>
             <nz-form-control [nzSm]="16" [nzXs]="24" *ngIf="classifyOutputData.length > 0" >
                 <nz-cascader

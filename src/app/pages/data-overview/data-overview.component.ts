@@ -117,10 +117,12 @@ export class DataOverviewComponent implements OnInit {
 	}
 	// 客户时间过滤
 	onChangeTime(event) {
-		if (event === false && this.date.length === 2) {
-			this.start = this.common.formatTime(this.date[0]);
-			this.end = this.common.formatTime(this.date[1]);
-			this.getAllcustomer();
+		if(this.date) {
+			if (event === false && this.date.length === 2) {
+				this.start = this.common.formatTime(this.date[0]);
+				this.end = this.common.formatTime(this.date[1]);
+				this.getAllcustomer();
+			}
 		}
 	}
 	// 是否清空时间

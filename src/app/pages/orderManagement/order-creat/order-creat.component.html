@@ -1,12 +1,8 @@
 <form nz-form>
     <nz-form-item>
-        <nz-form-label [nzSpan]="3" nzRequired>选择部门</nz-form-label>
+        <nz-form-label [nzSpan]="3" nzRequired>部门</nz-form-label>
         <nz-form-control [nzSpan]="9">
-            <nz-select class="w350" nzAllowClear nzPlaceHolder="请选择部门" [(ngModel)]="textInfo.department"
-                name="department" (ngModelChange)="changeDepartment()">
-                <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
-                </nz-option>
-            </nz-select>
+            租赁部
         </nz-form-control>
         <nz-form-label [nzSpan]="3" nzRequired>途径来源</nz-form-label>
         <nz-form-control [nzSpan]="9">

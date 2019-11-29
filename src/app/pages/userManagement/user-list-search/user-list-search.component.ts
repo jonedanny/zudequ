@@ -25,7 +25,7 @@ export class UserListSearchComponent implements OnInit {
 
 	currentUser = null; // 当前选择的客户
 
-	tableScroll = { y: `${document.body.clientHeight - 400}px`, x: '1380px' };
+	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1380px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;

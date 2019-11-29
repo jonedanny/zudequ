@@ -43,6 +43,22 @@
         ]
     },
     {
+        "name": "销售管理",
+        "ico": "shop",
+        "child": [
+            {
+                "name": "销售单创建",
+                "selected": false,
+                "url": "SellCreat"
+            },
+            {
+                "name": "已售商品列表",
+                "selected": false,
+                "url": "SoldDeviceList"
+            }
+        ]
+    },
+    {
         "name": "商品管理",
         "ico": "block",
         "child": [
@@ -60,6 +76,27 @@
                 "name": "商品查询",
                 "selected": false,
                 "url": "ProductSearch"
+            }
+        ]
+    },
+    {
+        "name": "游戏管理",
+        "ico": "deployment-unit",
+        "child": [
+            {
+                "name": "游戏添加",
+                "selected": false,
+                "url": "GameAdd"
+            },
+            {
+                "name": "游戏列表",
+                "selected": false,
+                "url": "GameList"
+            },
+            {
+                "name": "游戏配置编辑",
+                "selected": false,
+                "url": "GameOptionEdit"
             }
         ]
     },

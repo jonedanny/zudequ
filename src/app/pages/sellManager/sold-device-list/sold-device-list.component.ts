@@ -4,11 +4,11 @@ import { CommonDataService } from '../../../service/common-data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
-  selector: 'app-customer-repair-search',
-  templateUrl: './customer-repair-search.component.html',
-  styleUrls: ['./customer-repair-search.component.scss']
+  selector: 'app-sold-device-list',
+  templateUrl: './sold-device-list.component.html',
+  styleUrls: ['./sold-device-list.component.scss']
 })
-export class CustomerRepairSearchComponent implements OnInit {
+export class SoldDeviceListComponent implements OnInit {
 
 	constructor(
 		public common: CommonDataService,
@@ -23,8 +23,8 @@ export class CustomerRepairSearchComponent implements OnInit {
 	fillterData = {
 		page: 1,
 		rows: 25,
-		repairID: '',
-		taobaoID: ''
+		name: '',
+		user: ''
 	};
 	ngOnInit() {
 		this.search();
@@ -32,7 +32,7 @@ export class CustomerRepairSearchComponent implements OnInit {
 	// 过滤搜索
 	search() {
 		this.loading = true;
-		this.Requset.post$('repair/searchCustomerApply',this.fillterData).subscribe(res => {
+		this.Requset.post$('productmanager/searchSoldDevice',this.fillterData).subscribe(res => {
 			if(res) {
 				this.result = res.content;
 				this.total = res.total;

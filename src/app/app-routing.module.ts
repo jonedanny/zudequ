@@ -26,6 +26,14 @@ import { RepairAddComponent } from './pages/repairManager/repair-add/repair-add.
 import { RepairEditComponent } from './pages/repairManager/repair-edit/repair-edit.component';
 import { CustomerRepairSearchComponent } from './pages/repairManager/customer-repair-search/customer-repair-search.component';
 
+import { SellCreatComponent } from './pages/sellManager/sell-creat/sell-creat.component';
+import { SoldDeviceListComponent } from './pages/sellManager/sold-device-list/sold-device-list.component';
+
+import { GameAddComponent } from './pages/gameManager/game-add/game-add.component';
+import { GameListComponent } from './pages/gameManager/game-list/game-list.component';
+import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/game-option-edit.component';
+
+
 const routes: Routes = [
 	{ path:'', component:LoginComponent },
 	{ path:'Login', component:LoginComponent },
@@ -40,10 +48,17 @@ const routes: Routes = [
 		{ path: 'OrderCreat', component: OrderCreatComponent },
 		{ path: 'OrderEdit', component: OrderEditComponent },
 		{ path: 'OrderFinishSearch', component: OrderFinishSearchComponent },
+		// 销售管理
+		{ path: 'SellCreat', component: SellCreatComponent },
+		{ path: 'SoldDeviceList', component: SoldDeviceListComponent },
 		// 商品管理
 		{ path: 'ProductClassifyManagement', component: ProductClassifyManagementComponent },
 		{ path: 'ProductAdd', component: ProductAddComponent },
 		{ path: 'ProductSearch', component: ProductSearchComponent },
+		// 游戏管理
+		{ path: 'GameAdd', component: GameAddComponent },
+		{ path: 'GameList', component: GameListComponent },
+		{ path: 'GameOptionEdit', component: GameOptionEditComponent },
 		// 游戏设备维修
 		{ path: 'RepairAdd', component: RepairAddComponent },
 		{ path: 'RepairEdit', component: RepairEditComponent },

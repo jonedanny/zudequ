@@ -17,7 +17,6 @@ export class ProductAddComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 	
-	departmentList; // 部门列表
 	productClassify; // 商品分类 数据
 	adminList; // 管理员列表
 
@@ -25,7 +24,7 @@ export class ProductAddComponent implements OnInit {
 	classifyOutputData = []; // 分类输出数据
 
 	chooseInfo = {
-		department: null,
+		department: 1,
 		name: '',
 		des: '',
 		classify_a: '',
@@ -39,10 +38,8 @@ export class ProductAddComponent implements OnInit {
 	chooseInfoCopy = JSON.parse(JSON.stringify(this.chooseInfo));
 	ngOnInit() {
 		this.common.initData(() => {
-			this.departmentList = this.common.departmentList;
 			this.productClassify = this.common.productClassify;
 			this.adminList = this.common.adminList;
-			console.log(this.departmentList, this.productClassify, this.adminList);
 			this.refreshClassify();
 		});
 	}
@@ -121,10 +118,7 @@ export class ProductAddComponent implements OnInit {
 	// 数据校验
 	validate() {
 		let result = true;
-		if (this.chooseInfo.department === null) {
-			this.message.error('请选择部门');
-			result = false;
-		} else if (this.chooseInfo.name === '') {
+		if (this.chooseInfo.name === '') {
 			this.message.error('请输入商品名称');
 			result = false;
 		} else if (this.chooseInfo.classify_a === '') {

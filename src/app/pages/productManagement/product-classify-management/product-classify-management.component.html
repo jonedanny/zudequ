@@ -45,7 +45,7 @@
                 </nz-form-control>
             </nz-form-item>
         </div>
-        <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
+        <button nz-button [disabled]="true" [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
     </div>
     <nz-divider *ngIf="hasAddSub"></nz-divider>
     <div nz-row *ngIf="hasAddSub">
