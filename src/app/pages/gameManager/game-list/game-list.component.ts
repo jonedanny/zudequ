@@ -17,7 +17,7 @@ export class GameListComponent implements OnInit {
 		private Requset: RequsetService
   ) { }
   
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1500px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1500px' };
 	baseImgUrl = location.href.indexOf('http://localhost') !== -1 ? 'http://127.0.0.1/ZdpPhpManager/' : 'http://122.114.177.171:8006/ZdpPhpManager/';
 	result = []; // 查询结果
 	loading = true;

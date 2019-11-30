@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RequsetService } from '../../../service/requset.service';
 import { CommonDataService } from '../../../service/common-data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
 	selector: 'app-order-creat',
@@ -13,9 +14,11 @@ export class OrderCreatComponent implements OnInit {
 	constructor(
 		private message: NzMessageService,
 		private common: CommonDataService,
-		private Requset: RequsetService
+		private Requset: RequsetService,
+		private modal: NzModalService
 	) { }
 
+	confirmModal: NzModalRef;
 	adminList; // 管理员列表
 	productClassify; // 商品分类 数据
 	userLoginInfo = JSON.parse(localStorage.getItem('userLoginInfo'));
@@ -131,47 +134,65 @@ export class OrderCreatComponent implements OnInit {
 	// 创建订单
 	submitForm() {
 		if(this.validate()) {
-			// 自动计算租赁结束日期
-			this.textInfo.end = this.common.calcAddNumDate(this.textInfo.start, this.leaseDay - 1);
-			console.log(this.textInfo,this.productSelectList)
-			this.isSpinning = true;
-			let details = [];
-			this.productSelectList.forEach(x => {
-				details.push({
-					"pid" : x.id,     // 商品ID必传
-					"pName" : x.name,   //  商品名称  必传
-					"rent" : x.out_price,     // 单位租金  必传（两位小数）
-					"userid" : x.origin,   // 出租人ID（设备所有人） 必传  （整数）
-					"username" : this.systemIdChange(x.origin), //  出租人姓名（设备所有人姓名） 必传
-					"des" : x.des  // 说明备注
-				});
-			});
-			const data = {
-				"version":"1.0",
-				"modular":"order",
-				"requestname":"creatOrder",
-				"param":{
-					"start" : this.textInfo.start,    // 开始时间 必传
-					"end" : this.textInfo.end,     // 结束时间 必传
-					"money" : this.textInfo.money,   // 订单金额 必传  （两位小数）
-					"deposit" : this.textInfo.deposit,   // 趣币  （整数）
-					"origin" : this.textInfo.origin,    // 承租人
-					"des" : this.textInfo.des,     // 说明备注
-					"department" : this.textInfo.department,    // 部门ID 必传
-					"opteration" : this.textInfo.operator,      // 操作员  必传
-					"phone" : this.textInfo.phone,         // 用户手机 必传
-					"store" : this.textInfo.store,
-					"details" : details				
+			// 重复付款途径订单查询警告
+			this.Requset.post$('ordermanager/warningRepeatOrigin', {origin: this.textInfo.origin}).subscribe(res => {
+				console.log(res);
+				if(res && res.content === 0) {
+					this.creatOrder();
 				}
-			}
-			this.Requset.post$('javacontact/javaContact',{data: JSON.stringify(data)}).subscribe(res => {
-				this.isSpinning = false;
-				this.textInfo = JSON.parse(JSON.stringify(this.textInfoCopy));
-				this.refreshProList();
-				this.leaseDay = null;
-				this.message.success('创建订单成功');
+				else if (res && res.content > 0) {
+					this.confirmModal = this.modal.confirm({
+						nzTitle: '订单提示',
+						nzContent: '已存在相同付款途径的租赁中订单，是否继续?',
+						nzOnOk: () => {
+							this.creatOrder();
+						}
+					});
+				}
 			});
 		}
+	}
+	creatOrder() {
+		// 自动计算租赁结束日期
+		this.textInfo.end = this.common.calcAddNumDate(this.textInfo.start, this.leaseDay - 1);
+		console.log(this.textInfo,this.productSelectList)
+		this.isSpinning = true;
+		let details = [];
+		this.productSelectList.forEach(x => {
+			details.push({
+				"pid" : x.id,     // 商品ID必传
+				"pName" : x.name,   //  商品名称  必传
+				"rent" : x.out_price,     // 单位租金  必传（两位小数）
+				"userid" : x.origin,   // 出租人ID（设备所有人） 必传  （整数）
+				"username" : this.systemIdChange(x.origin), //  出租人姓名（设备所有人姓名） 必传
+				"des" : x.des  // 说明备注
+			});
+		});
+		const data = {
+			"version":"1.0",
+			"modular":"order",
+			"requestname":"creatOrder",
+			"param":{
+				"start" : this.textInfo.start,    // 开始时间 必传
+				"end" : this.textInfo.end,     // 结束时间 必传
+				"money" : this.textInfo.money,   // 订单金额 必传  （两位小数）
+				"deposit" : this.textInfo.deposit,   // 趣币  （整数）
+				"origin" : this.textInfo.origin,    // 承租人
+				"des" : this.textInfo.des,     // 说明备注
+				"department" : this.textInfo.department,    // 部门ID 必传
+				"opteration" : this.textInfo.operator,      // 操作员  必传
+				"phone" : this.textInfo.phone,         // 用户手机 必传
+				"store" : this.textInfo.store,
+				"details" : details				
+			}
+		}
+		this.Requset.post$('javacontact/javaContact',{data: JSON.stringify(data)}).subscribe(res => {
+			this.isSpinning = false;
+			this.textInfo = JSON.parse(JSON.stringify(this.textInfoCopy));
+			this.refreshProList();
+			this.leaseDay = null;
+			this.message.success('创建订单成功');
+		});
 	}
 	// 清除分类
 	clearClassify() {

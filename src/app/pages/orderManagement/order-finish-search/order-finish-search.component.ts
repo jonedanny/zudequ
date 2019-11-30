@@ -15,7 +15,7 @@ export class OrderFinishSearchComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1700px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1700px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	loading = true;

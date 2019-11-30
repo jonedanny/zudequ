@@ -15,7 +15,7 @@ export class OrderEditComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '2100px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2100px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	storeList = []; // 店铺来源列表
@@ -30,7 +30,6 @@ export class OrderEditComponent implements OnInit {
 		des: '',
 		relativePeople: '',
 		completed: 0,
-		department: '',
 		sort: null
 	};
 	fillterDataCopy = JSON.parse(JSON.stringify(this.fillterData));
