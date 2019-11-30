@@ -29,7 +29,7 @@ export class RequsetService {
 	 * 改变头部验证
 	 */
 	setHeaderToken(token) {
-		this.headers = new HttpHeaders().set("author", token);
+		this.headers = new HttpHeaders().set("Author", token);
 	}
 
 	get$(url): Observable<any> {
