@@ -19,7 +19,7 @@ export class QbEidtComponent implements OnInit {
 
 	qbModifyDisplay: boolean = false;
 	visible: boolean = false;
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '950px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '950px' };
 	result = []; // 查询结果
 	currentQbHistory = null; // 历史趣币变动结果
 	loading = true;

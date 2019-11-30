@@ -3,8 +3,9 @@
         <div nz-col nzSpan="4">
             <input type="text" nz-input [(ngModel)]="fillterData.username" placeholder="请输入用户名" />
         </div>
-        <div nz-col nzSpan="4">
-            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        <div nz-col nzSpan="8">
+            <button nz-button nzType="primary" class="mr-10" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+            <button nz-button (click)="creatCustomerUser()"><i nz-icon nzType="user-add" nzTheme="outline"></i> 添加客户</button>
         </div>
     </nz-input-group>
 </div>
@@ -62,4 +63,17 @@
             <input type="text" nz-input [(ngModel)]="resetPwdValue" placeholder="密码不能小于6位" />
         </nz-input-group>
     </p>
+</nz-modal>
+<nz-modal
+    [(nzVisible)]="creatCustomerDisplay"
+    nzTitle="新用户添加"
+    nzOkText="添加"
+    nzCancelText="取消"
+    [nzOkLoading]="loading"
+    (nzOnOk)="customerCreat()"
+    (nzOnCancel)="creatCustomerDisplay = false"
+    nzWidth="400"
+>
+    <p><input class="w350" nz-input placeholder="请输入用户名 (手机号)" [(ngModel)]="creatCustomerData.username" maxlength="11" /></p>
+    <p><i nz-icon nzType="info-circle" nzTheme="outline"></i> 首次注册赠送500趣币</p>
 </nz-modal>

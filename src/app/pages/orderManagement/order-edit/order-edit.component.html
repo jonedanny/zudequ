@@ -12,14 +12,7 @@
         <div nz-col nzSpan="3">
             <input type="text" nz-input [(ngModel)]="fillterData.des" placeholder="备注" />
         </div>
-        <div nz-col nzSpan="3">
-            <nz-select nzAllowClear nzPlaceHolder="部门" name="origin" class="w100p" [(ngModel)]="fillterData.department">
-                <nz-option nzValue="" nzLabel="请选择部门"></nz-option>
-                <nz-option *ngFor="let item of departmentList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
-                </nz-option>
-            </nz-select>
-        </div>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="4">
             <nz-select nzAllowClear nzPlaceHolder="相关租赁人" name="origin" class="w100p"
                 [(ngModel)]="fillterData.relativePeople">
                 <nz-option nzValue="" nzLabel="请选择相关租赁人"></nz-option>

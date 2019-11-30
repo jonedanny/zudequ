@@ -1,15 +1,19 @@
 <div class="table-operations">
     <nz-input-group>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="4">
             <input type="text" nz-input [(ngModel)]="fillterData.name" placeholder="游戏名" />
         </div>
-        <div nz-col nzSpan="3">
-            <input type="text" nz-input [(ngModel)]="fillterData.type" placeholder="游戏类型" />
+        <div nz-col nzSpan="4">
+            <nz-select class="w100p" [(ngModel)]="fillterData.type" nzAllowClear nzPlaceHolder="游戏类型">
+                <nz-option *ngFor="let item of type" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
         </div>
-        <div nz-col nzSpan="3">
-            <input type="text" nz-input [(ngModel)]="fillterData.classify" placeholder="游戏分类" />
+        <div nz-col nzSpan="4">
+            <nz-select class="w100p" [(ngModel)]="fillterData.classify" nzAllowClear nzPlaceHolder="游戏分类">
+                <nz-option *ngFor="let item of classify" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
         </div>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="4">
             <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
         </div>
     </nz-input-group>
@@ -19,9 +23,10 @@
     (nzPageIndexChange)="search()">
     <thead>
         <tr>
-            <th nzWidth="100px">ID</th>
-            <th nzWidth="100px">封面</th>
+            <th nzWidth="150px">封面</th>
             <th nzWidth="400px">游戏名</th>
+            <th nzWidth="150px">租金</th>
+            <th nzWidth="150px">押金</th>
             <th nzWidth="200px">分类</th>
             <th nzWidth="200px">类型</th>
             <th nzWidth="100px">容量</th>
@@ -31,9 +36,10 @@
     </thead>
     <tbody>
         <tr *ngFor="let item of result">
-            <td>{{item.id}}</td>
             <td><img class="w70" [src]="baseImgUrl + item.img" /></td>
             <td>{{item.name}}</td>
+            <td>{{item.lease_price}}</td>
+            <td>{{item.desposit}}</td>
             <td>{{item.classify}}</td>
             <td>{{item.type}}</td>
             <td>{{item.container}} G</td>

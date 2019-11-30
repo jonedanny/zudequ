@@ -42,7 +42,7 @@ export class UserCreditSearchComponent implements OnInit {
 	creditHistoryDetailDisplay: boolean = false;
 
 	creditSearchDisplay: boolean;
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '2700px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2700px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;

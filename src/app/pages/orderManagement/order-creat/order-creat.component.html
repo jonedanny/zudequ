@@ -44,11 +44,11 @@
             {{userLoginInfo.name}}
         </nz-form-control>
     </nz-form-item>
-    <nz-form-item [hidden]="textInfo.department === null" *ngIf="this.classifyOutputData.length > 0">
+    <nz-form-item [hidden]="textInfo.department === null">
         <nz-form-label [nzSm]="3" nzRequired>添加订单商品</nz-form-label>
         <nz-form-control [nzSm]="21">
             <nz-spin [nzSpinning]="isSpinning">
-                <div nz-row class="add-product">
+                <div nz-row class="add-product" *ngIf="this.classifyOutputData.length > 0">
                     <div nz-col nzSpan="12">
                         <div id="origin">
                             <div id="filter">

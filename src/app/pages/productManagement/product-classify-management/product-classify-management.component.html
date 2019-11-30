@@ -1,10 +1,12 @@
 <button nz-button nzType="primary" (click)="modalDisplay = true">添加顶级分类</button>
 <nz-divider></nz-divider>
-<nz-spin [nzSpinning]="isSpinning">
-    <nz-tree *ngIf="classifyOutputData.length > 0" [nzData]="classifyOutputData" nzShowLine
-        (nzDblClick)="nzEvent($event)">
-    </nz-tree>
-</nz-spin>
+<div id="tree">
+    <nz-spin [nzSpinning]="isSpinning">
+        <nz-tree *ngIf="classifyOutputData.length > 0" [nzData]="classifyOutputData" nzShowLine
+            (nzDblClick)="nzEvent($event)">
+        </nz-tree>
+    </nz-spin>
+</div>
 <nz-drawer [nzVisible]="visible" [nzWidth]="500" [nzClosable]="false" (nzOnClose)="close()">
     <p>
         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">

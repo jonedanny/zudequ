@@ -20,12 +20,14 @@ export class UserListSearchComponent implements OnInit {
 	confirmModal: NzModalRef;
 
 	resetPwdDisplay = false; // 重置密码框显示
+	creatCustomerDisplay = false; // 
+
 	resetLoading = false;
 	resetPwdValue = ''; // 重置的密码值 (大于6位)
 
 	currentUser = null; // 当前选择的客户
 
-	tableScroll = { y: `${document.body.clientHeight - 330}px`, x: '1380px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1380px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;
@@ -34,6 +36,10 @@ export class UserListSearchComponent implements OnInit {
 		rows: 25,
 		username: ''
 	};
+
+	creatCustomerData = {
+		username: ''
+	}
 
 	ngOnInit() {
 		this.common.initData(() => {
@@ -93,6 +99,24 @@ export class UserListSearchComponent implements OnInit {
 						resolve();
 					});
 				}).catch(() => console.log('Oops errors!'))
+		});
+	}
+	// 创建用户
+	creatCustomerUser() {
+		this.creatCustomerDisplay = true;
+	}
+	customerCreat() {
+		if(this.creatCustomerData.username === '') {
+			this.message.warning('用户名不能为空');
+			return;
+		}
+		this.Requset.post$('usermanager/creatNewCustomer', this.creatCustomerData).subscribe((res) => {
+			if(res) {
+				this.creatCustomerData.username = '';
+				this.message.success('添加成功');
+				this.searchData();
+			}
+			this.creatCustomerDisplay = false;
 		});
 	}
 }
