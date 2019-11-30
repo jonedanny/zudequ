@@ -16,7 +16,7 @@ export class ProductSearchComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1550px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1750px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;
@@ -43,6 +43,8 @@ export class ProductSearchComponent implements OnInit {
 	leaseHistoryList = []; // 租赁历史记录数据
 	leaseHistoryTitle = '';
 
+	deviceFromDisplay = false; // 查询设备所属订单 显示框
+	deviceFromData = null;
 	
 	ngOnInit() {
 		this.common.initData(() => {
@@ -58,6 +60,10 @@ export class ProductSearchComponent implements OnInit {
 			this.result = res.content;
 			this.total = res.total;
 			console.log(res.content)
+			// 格式化 年化率
+			res.content.forEach(x => {
+				x.nhl = (x.nhl * 100).toFixed(2) || 0;
+			});
 			this.result.forEach(x => {
 				x.department = this.common.departmentTranslate(x.department);
 				x.classify_a = this.common.classifyATranslate(x.classify_a);
@@ -72,6 +78,17 @@ export class ProductSearchComponent implements OnInit {
 		this.fillterData.page = 1;
 		this.fillterData.rows = 25;
 		this.searchData();
+	}
+	// 根据设备查找所属订单
+	viewOrder(item) {
+		this.deviceFromDisplay = true;
+		this.Requset.post$('devicemanager/deviceFromOrder', item).subscribe(res => {
+			if(res) {
+				console.log(res);
+				this.deviceFromData = res.content;
+			}
+		});
+		
 	}
 	// 编辑商品
 	Edit(item) {

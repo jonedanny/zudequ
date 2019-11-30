@@ -34,12 +34,15 @@
         <tr>
             <th nzWidth="100px" nzAlign="left">ID</th>
             <th nzWidth="250px" nzAlign="left" nzLeft="0px">设备名</th>
-            <th nzWidth="100px" nzAlign="left">所属部门</th>
-            <th nzWidth="200px" nzAlign="left">所属分类</th>
-            <th nzWidth="100px" nzAlign="left">状态</th>
-            <th nzWidth="100px" nzAlign="left">来源</th>
+            <th nzWidth="200px">年化率</th>
             <th nzWidth="100px" nzAlign="left">设备价格</th>
             <th nzWidth="100px" nzAlign="left">出租价格</th>
+            <th nzWidth="100px" nzAlign="left">状态</th>
+            <th nzWidth="100px" nzAlign="left">所属部门</th>
+            <th nzWidth="200px" nzAlign="left">所属分类</th>
+            
+            <th nzWidth="100px" nzAlign="left">来源</th>
+            
             <th nzWidth="200px" nzAlign="left">入库时间</th>
             <th nzWidth="300px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
@@ -48,7 +51,19 @@
         <tr *ngFor="let item of result">
             <td>{{item.id}}</td>
             <td nzLeft="0px"><span class="w200 ellipsis">{{item.name}}</span></td>
+            <td>
+                <nz-progress
+                    [nzPercent]="item.nhl"
+                    [nzStrokeColor]="{ '0%': '#108ee9', '100%': '#87d068' }"
+                    nzStatus="active"
+                ></nz-progress>
+            </td>
+            <td>{{item.price}}</td>
+            <td>{{item.out_price}}</td>
             <td>{{item.department}}</td>
+            <td>
+                <a [ngClass]="{'c_green':item.is_sell === '1','c_orange':item.is_sell === '0'}" (click)="viewOrder(item)">{{item.is_sell === '1'?'租赁中 ...':'未租'}}</a>
+            </td>
             <td>
                 <nz-collapse>
                     <nz-collapse-panel>
@@ -58,11 +73,7 @@
                     </nz-collapse-panel>
                 </nz-collapse>
             </td>
-            <td [ngClass]="{'c_green':item.is_sell === '1','c_orange':item.is_sell === '0'}">
-                {{item.is_sell === '1'?'租赁中 ...':'未租'}}</td>
             <td>{{common.adminListTranslate(item.origin)}}</td>
-            <td>{{item.price}}</td>
-            <td>{{item.out_price}}</td>
             <td>{{item.creat_time}}</td>
             <td nzRight="0px">
                 <a (click)="Edit(item)">编辑</a>
@@ -136,3 +147,28 @@
         </nz-timeline-item>
     </nz-timeline>
 </nz-drawer>
+<nz-modal
+    [(nzVisible)]="deviceFromDisplay"
+    nzTitle="设备所属订单"
+    nzMaskClosable="true"
+    [nzFooter]="null"
+    (nzOnCancel)="deviceFromDisplay = false;deviceFromData = null;"
+>
+    <div class="pb-20 pt-20" *ngIf="deviceFromData === null"><nz-spin nzTip="正在加载数据 ..."></nz-spin></div>
+    <div *ngIf="deviceFromData !== null">
+        <p>订单创建时间: {{deviceFromData.order[0].addTime}}</p>
+        <p>来源: {{deviceFromData.order[0].origin}}</p>
+        <p>会员号: {{deviceFromData.order[0].phone}}</p>
+        <p>操作员: {{deviceFromData.order[0].opteration}}</p>
+        <p>订单时间: {{deviceFromData.order[0].start}} / {{deviceFromData.order[0].end}}</p>
+        <p>押金: {{deviceFromData.order[0].deposit}}</p>
+        <p>租金: {{deviceFromData.order[0].money}}</p>
+        <p>备注: {{deviceFromData.order[0].des}}</p>
+        <div class="pt-20">
+            <p>商品列表</p>
+            <p *ngFor="let item of deviceFromData.deviceList">
+                ID: {{item.id}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [{{item.userName}}]
+            </p>
+        </div>
+    </div>
+</nz-modal>

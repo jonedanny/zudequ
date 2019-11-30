@@ -56,6 +56,12 @@ body {
 .mr-10 {
     margin-right: 10px;
 }
+.pb-20 {
+    padding-bottom: 20px;
+}
+.pt-20 {
+    padding-top: 20px;
+}
 .ellipsis {
     overflow: hidden;
     text-overflow:ellipsis;
@@ -95,4 +101,7 @@ app-data-overview {
 }
 .ant-descriptions-item-label {
     vertical-align: top;
+}
+.ant-progress-line {
+    width: 90% !important;
 }
