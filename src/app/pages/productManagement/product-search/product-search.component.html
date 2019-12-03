@@ -35,6 +35,7 @@
             <th nzWidth="100px" nzAlign="left">ID</th>
             <th nzWidth="250px" nzAlign="left" nzLeft="0px">设备名</th>
             <th nzWidth="200px">年化率</th>
+            <th nzWidth="200px">成本回收</th>
             <th nzWidth="100px" nzAlign="left">设备价格</th>
             <th nzWidth="100px" nzAlign="left">出租价格</th>
             <th nzWidth="100px" nzAlign="left">状态</th>
@@ -57,6 +58,10 @@
                     [nzStrokeColor]="{ '0%': '#108ee9', '100%': '#87d068' }"
                     nzStatus="active"
                 ></nz-progress>
+            </td>
+            <td>
+                {{item.ljsy || 0}} / {{item.price || 0}}
+                <nz-progress [nzPercent]="item.ljsy ? item.ljsy / item.price * 100 : 0" nzStatus="exception"></nz-progress>
             </td>
             <td>{{item.price}}</td>
             <td>{{item.out_price}}</td>
@@ -96,7 +101,7 @@
     <nz-divider></nz-divider>
     <nz-descriptions [nzColumn]="2">
         <nz-descriptions-item nzTitle="ID" [nzSpan]="1">{{selectData.id}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="名称" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.name" nzSize="small" /></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="名称" [nzSpan]="1"><input nz-input [(ngModel)]="selectData.name" /></nz-descriptions-item>
         <nz-descriptions-item nzTitle="部门" [nzSpan]="2">{{selectData.department}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="所属分类" [nzSpan]="2">
             <nz-input-group nzCompact>
@@ -151,24 +156,26 @@
     [(nzVisible)]="deviceFromDisplay"
     nzTitle="设备所属订单"
     nzMaskClosable="true"
+    nzWidth="800"
     [nzFooter]="null"
     (nzOnCancel)="deviceFromDisplay = false;deviceFromData = null;"
 >
     <div class="pb-20 pt-20" *ngIf="deviceFromData === null"><nz-spin nzTip="正在加载数据 ..."></nz-spin></div>
     <div *ngIf="deviceFromData !== null">
-        <p>订单创建时间: {{deviceFromData.order[0].addTime}}</p>
-        <p>来源: {{deviceFromData.order[0].origin}}</p>
-        <p>会员号: {{deviceFromData.order[0].phone}}</p>
-        <p>操作员: {{deviceFromData.order[0].opteration}}</p>
-        <p>订单时间: {{deviceFromData.order[0].start}} / {{deviceFromData.order[0].end}}</p>
-        <p>押金: {{deviceFromData.order[0].deposit}}</p>
-        <p>租金: {{deviceFromData.order[0].money}}</p>
-        <p>备注: {{deviceFromData.order[0].des}}</p>
-        <div class="pt-20">
-            <p>商品列表</p>
-            <p *ngFor="let item of deviceFromData.deviceList">
-                ID: {{item.id}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [{{item.userName}}]
-            </p>
-        </div>
+        <nz-descriptions nzBordered [nzColumn]="2">
+            <nz-descriptions-item nzTitle="订单创建时间">{{deviceFromData.order[0].addTime}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="来源">{{deviceFromData.order[0].origin}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="会员号">{{deviceFromData.order[0].phone}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="操作员">{{deviceFromData.order[0].opteration}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="订单时间">{{deviceFromData.order[0].start}} / {{deviceFromData.order[0].end}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="押金">{{deviceFromData.order[0].deposit}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="租金">{{deviceFromData.order[0].money}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="备注">{{deviceFromData.order[0].des}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="商品列表">
+                <p *ngFor="let item of deviceFromData.deviceList">
+                    ID: {{item.id}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [{{item.userName}}]
+                </p>
+            </nz-descriptions-item>
+        </nz-descriptions>
     </div>
 </nz-modal>

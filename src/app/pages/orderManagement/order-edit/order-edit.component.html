@@ -248,7 +248,7 @@
         </nz-descriptions-item>
     </nz-descriptions>
     <nz-input-group nzCompact>
-        <input class="w230" type="text" nz-input placeholder="可按ID或商品名进行模糊查询" [(ngModel)]="addDeviceFilter" (keyup)="addDeviceFilterSearch()" />
+        <input class="w230" type="text" nz-input placeholder="可按ID或商品名进行模糊查询" [(ngModel)]="addDeviceFilter" (blur)="addDeviceFilterSearch()" />
         <nz-date-picker nzPlaceHolder="商品起租时间" [ngModel]="addModifyDeviceTime" (ngModelChange)="editOrderDeviceTime($event,'add')"></nz-date-picker>
     </nz-input-group>
     
