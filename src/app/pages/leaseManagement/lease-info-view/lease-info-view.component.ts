@@ -45,7 +45,7 @@ export class LeaseInfoViewComponent implements OnInit {
 	}
 	payDataCopy = JSON.parse(JSON.stringify(this.payData));
 	deviceLeaseMoney = 0;
-	estimateMoney = 0;
+	estimateMoney = 0; // 系统估计的租金
 	ngOnInit() {
 		this.common.initData(() => {
 			this.adminList = this.common.adminList;
@@ -83,36 +83,35 @@ export class LeaseInfoViewComponent implements OnInit {
 		this.payData.lease_day = this.common.DateDiffNormal(item.lease_start,item.lease_end);
 		this.payData.lease_start = item.lease_start;
 		this.payData.lease_end = item.lease_end;
-		this.loading = true;
-		// 查询设备租金
-		this.Requset.post$('ordermanager/searchDeviceForId', {
-			id: item.device_id
-		}).subscribe(res => {
-			console.log(res);
-			this.loading = false;
-			this.visible = true;
-			this.deviceLeaseMoney = res.content[0].out_price;
-			this.estimateMoney = Number(this.deviceLeaseMoney) * Number(this.payData.lease_day);
-		});
-		console.log(item);
+		this.estimateMoney = item.lease_price;
+		this.visible = true;
+		// this.loading = true;
+		// // 查询设备租金
+		// this.Requset.post$('ordermanager/searchDeviceForId', {
+		// 	id: item.device_id
+		// }).subscribe(res => {
+		// 	console.log(res);
+		// 	this.loading = false;
+		// 	this.visible = true;
+		// 	this.deviceLeaseMoney = res.content[0].out_price;
+		// 	this.estimateMoney = Number(this.deviceLeaseMoney) * Number(this.payData.lease_day);
+		// });
 	}
 	// 租金更改
 	changeMoney() {
-		this.payData.other_price = Number(this.estimateMoney) - Number(this.payData.lease_price);
+		console.log(this.payData.lease_price, this.estimateMoney);
+		this.payData.other_price =  Number(this.estimateMoney) - Number(this.payData.lease_price);
+		this.payData.other_price > 0 ? this.payData.other_price : 0;
 	}
 	onTimeChange(event) {
 		if(event.length === 0){
 			this.payData.lease_day = 0;
-			this.payData.lease_price = 0;
-			this.payData.other_price = 0;
 			this.payData.lease_start = '';
 			this.payData.lease_end = '';
 		} else {
 			this.payData.lease_start = this.common.formatNormalTime(event[0]);
 			this.payData.lease_end = this.common.formatNormalTime(event[1]);
 			this.payData.lease_day = this.common.DateDiffNormal(this.payData.lease_start,this.payData.lease_end);
-			this.estimateMoney = Number(this.deviceLeaseMoney) * Number(this.payData.lease_day);
-			this.changeMoney();
 		}
 	}
 	// 更新订单数据
