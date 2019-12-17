@@ -59,7 +59,7 @@
                                         name="classify">
                                     </nz-cascader>
                                     <input nz-input placeholder="按商品名模糊搜索" name="name" [(ngModel)]="textInfo.name"
-                                        (keyup)="refreshProList()" />
+                                        (blur)="refreshProList()" />
                                 </nz-input-group>
                             </div>
                             <div id="origin-content">

@@ -30,6 +30,8 @@ export class GameListComponent implements OnInit {
 		type: null,
 		classify: null
 	};
+	selectData = null; // 需要编辑的选中数据
+	editGameInfoDisplay = false;
 	ngOnInit() {
 		this.searchTypeAndClassify();
 		this.search();
@@ -56,5 +58,25 @@ export class GameListComponent implements OnInit {
 			}
 			this.loading = false;
 		});
+	}
+	// 编辑游戏
+	editGame(item) {
+		this.editGameInfoDisplay = true;
+		this.selectData = item;
+		console.log(item);
+	}
+	// 保存游戏信息
+	saveGameInfo() {
+		this.loading = true;
+		this.Requset.post$('gamemanager/saveGameInfo',this.selectData).subscribe(res => {
+			if(res) {
+				this.message.success('保存游戏信息成功');
+			}
+			this.loading = false;
+			this.editGameInfoDisplay = false;
+		});
+	}
+	close(): void {
+		this.editGameInfoDisplay = false;
 	}
 }

@@ -29,9 +29,9 @@
     <div nz-row>
         <div nz-col>
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">分类设备价格: </nz-form-label>
+                <nz-form-label [nzSpan]="6">分类设备买断价: </nz-form-label>
                 <nz-form-control [nzSpan]="14">
-                    <nz-input-number [(ngModel)]="deviceSellInfo.price" name="price" class="100p"></nz-input-number> 元
+                    <nz-input-number [(ngModel)]="deviceSellInfo.price" name="price" class="100p" [disabled]="true"></nz-input-number> 元
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -47,7 +47,7 @@
                 </nz-form-control>
             </nz-form-item>
         </div>
-        <button nz-button [disabled]="true" [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
+        <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
     </div>
     <nz-divider *ngIf="hasAddSub"></nz-divider>
     <div nz-row *ngIf="hasAddSub">

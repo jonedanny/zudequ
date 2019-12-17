@@ -61,22 +61,14 @@ export class DataOverviewComponent implements OnInit {
 		});
 	}
 
-	// 获取自己设备所有信息
+	// 获取用户投资状况
 	getSelfAllProInfo() {
-		this.common.getDeviceList(this.userLoginInfo.id).subscribe(res => {
-			const data = res.content
-			this.productAll = 0;
-			this.productLeased = 0;
-			this.investmentMoney = 0;
-
-			this.productAll = data.length;
-			for (let i = 0, r = data.length; i < r; i++) {
-				this.investmentMoney += Number(data[i].price);
-				if (data[i].is_sell === '1') {
-					this.productLeased++;
-				}
-			}
-			this.calcAnnualizedRate();
+		this.Requset.post$('indexmanager/getSelfAllProInfo',{userId:this.userLoginInfo.id}).subscribe(res => {
+			const data = res.content[0];
+			this.productAll = data.zs;
+			this.productLeased = data.cks;
+			this.investmentMoney = data.ztz;
+			this.annualizedRate = Number((data.nhl * 100).toFixed(2));
 		});
 	}
 	// 查询租金总收入
@@ -87,17 +79,9 @@ export class DataOverviewComponent implements OnInit {
 			for (let i = 0, r = data.length; i < r; i++) {
 				this.allLeaseComein += Number(data[i].profit);
 			}
-			this.calcAnnualizedRate();
 		});
 	}
-	// 统计年化率
-	calcAnnualizedRate() {
-		if(this.investmentMoney !== 0 && this.allLeaseComein !== 0) {
-			// 计算投资的时间
-			const _date = Number(this.common.DateDiff("2019-08-15"));
-			this.annualizedRate = (this.allLeaseComein / this.investmentMoney) / _date * 365 * 100;
-		}
-	}
+
 	// 查询所有客户
 	getAllcustomer() {
 		this.customerTotal = 0;

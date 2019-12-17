@@ -45,7 +45,7 @@
             <td>{{item.container}} G</td>
             <td>{{item.des}}</td>
             <td nzRight="0px">
-                <a>编辑</a>
+                <a (click)="editGame(item)">编辑</a>
                 <nz-divider nzType="vertical"></nz-divider>
                 <a>删除</a>
             </td>
@@ -53,3 +53,42 @@
     </tbody>
 </nz-table>
 <ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer *ngIf="selectData !== null" [nzClosable]="false" [nzWidth]="600" [nzVisible]="editGameInfoDisplay" nzPlacement="left" nzTitle="游戏编辑" (nzOnClose)="close()">
+    <nz-descriptions [nzColumn]="1">
+        <nz-descriptions-item nzTitle="封面" [nzSpan]="1">
+           <img class="w140" [src]="baseImgUrl + selectData.img" />
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <nz-descriptions [nzColumn]="2">
+        <nz-descriptions-item nzTitle="名称" [nzSpan]="2">
+            <input nz-input [(ngModel)]="selectData.name" class="w450" />
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="押金" [nzSpan]="1">
+            <nz-input-number [(ngModel)]="selectData.desposit" class="w185"></nz-input-number>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租金" [nzSpan]="1">
+            <nz-input-number [(ngModel)]="selectData.lease_price" class="w185"></nz-input-number>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="分类" [nzSpan]="1">
+            <nz-select [(ngModel)]="selectData.classify" class="w185">
+                <nz-option nzValue="-1" nzLabel="请选择分类"></nz-option>
+                <nz-option *ngFor="let item of classify" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="类型" [nzSpan]="1">
+            <nz-select [(ngModel)]="selectData.type" class="w185">
+                <nz-option nzValue="-1" nzLabel="请选择类型"></nz-option>
+                <nz-option *ngFor="let item of type" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="容量" [nzSpan]="1">
+            <nz-input-number [(ngModel)]="selectData.container" class="w70"></nz-input-number> G
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="备注" [nzSpan]="1">
+            <input nz-input [(ngModel)]="selectData.des" class="w185" />
+        </nz-descriptions-item>
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="saveGameInfo()"><i nz-icon nzType="save"></i>保存修改</button>
+</nz-drawer>

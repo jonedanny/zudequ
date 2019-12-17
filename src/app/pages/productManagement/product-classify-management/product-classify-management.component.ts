@@ -135,10 +135,10 @@ export class ProductClassifyManagementComponent implements OnInit {
 			this.message.warning('请填写正确设备租金');
 			return;
 		}
-		if(!this.deviceSellInfo.price || this.deviceSellInfo.price === null || this.deviceSellInfo.price <= 0) {
-			this.message.warning('请填写正确设备价格');
-			return;
-		}
+		// if(!this.deviceSellInfo.price || this.deviceSellInfo.price === null || this.deviceSellInfo.price <= 0) {
+		// 	this.message.warning('请填写正确设备价格');
+		// 	return;
+		// }
 		const data = {
 			"version":"1.0",
 			"modular":"product",
@@ -155,14 +155,12 @@ export class ProductClassifyManagementComponent implements OnInit {
 		}
 		this.isSpinning = true;
 		this.Requset.post$('javacontact/javaContact',{data: JSON.stringify(data)}).subscribe(res => {
-			if(res && Number(res.content) > 0) {
+			if(res.success) {
 				this.message.success('修改分类设备价格与租金成功');
 				this.deviceSellInfo = JSON.parse(JSON.stringify(this.deviceSellInfoCopy));
-				this.isSpinning = false;
-			} else {
-				this.message.error('该分类下没有找到直属的设备');
-				this.isSpinning = false;
 			}
+			this.isSpinning = false;
+			this.close();
 		});
 	}
 	// 添加顶级分类
