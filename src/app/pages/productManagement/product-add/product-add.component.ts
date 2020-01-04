@@ -89,18 +89,22 @@ export class ProductAddComponent implements OnInit {
 	}
 	// 更改分类
 	changeClassify(values: any): void {
+		console.log(values);
 		this.chooseInfo.classify_a = '';
 		this.chooseInfo.classify_b = '';
 		this.chooseInfo.classify_c = '';
 		if(values.length === 1) {
 			this.chooseInfo.classify_a = values[0].id;
+			this.chooseInfo.out_price = values[0].product_rent || 0;
 		} else if (values.length === 2) {
 			this.chooseInfo.classify_a = values[0].id;
 			this.chooseInfo.classify_b = values[1].id;
+			this.chooseInfo.out_price = values[1].product_rent || 0;
 		} else if (values.length === 3) {
 			this.chooseInfo.classify_a = values[0].id;
 			this.chooseInfo.classify_b = values[1].id;
 			this.chooseInfo.classify_c = values[2].id;
+			this.chooseInfo.out_price = values[2].product_rent || 0;
 		}
 	}
 	// 数据提交

@@ -1,0 +1,131 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="8">
+            <button class="mr-10" nz-button (click)="open('add')"><i nz-icon nzType="plus-circle" nzTheme="outline"></i> 添加活动</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="isSpinning"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead>
+        <tr>
+            <th nzWidth="60px" nzAlign="left">ID</th>
+            <th nzWidth="140px" nzAlign="left">模块名称</th>
+            <th nzWidth="80px" nzAlign="left">排序</th>
+            <th nzWidth="150px" nzAlign="left">图片</th>
+            <th nzWidth="300px" nzAlign="left">外部链接</th>
+            <th nzWidth="100px" nzAlign="left">分类AID</th>
+            <th nzWidth="100px" nzAlign="left">分类BID</th>
+            <th nzWidth="100px" nzAlign="left">分类CID</th>
+            <th nzWidth="150px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>{{item.module_name}}</td>
+            <td>{{item.sort}}</td>
+            <td><img *ngIf="item.img_src" class="w120" [src]="'https://www.zudequ.com/cmd/images/' + item.img_src" /></td>
+            <td>{{item.out_src}}</td>
+            <td>{{item.classa_id === '-1' ? '无' : item.classa_id}}</td>
+            <td>{{item.classb_id === '-1' ? '无' : item.classb_id}}</td>
+            <td>{{item.classc_id === '-1' ? '无' : item.classc_id}}</td>
+            <td nzRight="0px">
+                <a (click)="edit(item)">修改</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nzType="danger" (click)="delete(item)"><i nz-icon nzType="delete"></i>删除</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="addColumnDisplay"
+    [nzWidth]="800"
+    nzTitle="活动"
+    (nzOnClose)="close()"
+>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>活动类型</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select [(ngModel)]="activeType" nzAllowClear nzPlaceHolder="请选择活动类型" name="activeType" (ngModelChange)="clearData()">
+                    <nz-option *ngFor="let item of common.activeType" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  *ngIf="activeType === '1' || activeType === '4'">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>选择分类</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" *ngIf="classifyOutputData.length > 0" >
+                <nz-cascader
+                    nzChangeOnSelect
+                    [nzOptions]="classifyOutputData"
+                    nzPlaceHolder="请选择分类"
+                    (nzSelectionChange)="changeClassify($event)"
+                    [(ngModel)]="classify.classifyValues"
+                    name="classify"
+                >
+                </nz-cascader>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="activeType === '1' || activeType === '2' || activeType === '3' || activeType === '4'">
+            <nz-form-label [nzSm]="6" [nzXs]="24">活动封面上传</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-upload
+                    class="avatar-uploader"
+                    nzAction="http://122.114.177.171:8180/imgUpload/upload"
+                    nzName="file"
+                    nzListType="picture-card"
+                    [nzShowUploadList]="false"
+                    [nzBeforeUpload]="common.beforeUpload"
+                    (nzChange)="changeAvatar($event)"
+                >
+                <ng-container *ngIf="!avatarUrl">
+                    <i class="upload-icon" nz-icon></i>
+                    <div class="ant-upload-text">封面</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="'https://www.zudequ.com/cmd/images/' + avatarUrl" class="avatar" />
+                </nz-upload>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="activeType === '2' || activeType === '3'">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>外链</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input placeholder="请输入外链地址" [(ngModel)]="link" name="link" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="activeType === '4'">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>商品名</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input placeholder="请输入商品名" [(ngModel)]="link" name="link" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="activeType === '4'">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>商品大类</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select [(ngModel)]="moduleClass" nzAllowClear nzPlaceHolder="请选择商品大类" name="activeType">
+                    <nz-option *ngFor="let item of common.productClass" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="activeType === '5'">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>通知</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input placeholder="请输入通知" [(ngModel)]="link" name="link" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-input-number [(ngModel)]="sort" [nzMin]="1" [nzMax]="999" [nzStep]="1" name="sort"></nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" (click)="save()">保存</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-drawer>

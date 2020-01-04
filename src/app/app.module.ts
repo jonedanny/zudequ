@@ -46,6 +46,8 @@ import { GameAddComponent } from './pages/gameManager/game-add/game-add.componen
 import { GameListComponent } from './pages/gameManager/game-list/game-list.component';
 import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/game-option-edit.component';
 
+import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
+
 
 registerLocaleData(zh);
 
@@ -74,7 +76,8 @@ registerLocaleData(zh);
 		SoldDeviceListComponent,
 		GameAddComponent,
 		GameListComponent,
-		GameOptionEditComponent
+		GameOptionEditComponent,
+		WechatActiveManagementComponent
 	],
 	imports: [
 		BrowserModule,

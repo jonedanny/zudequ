@@ -29,8 +29,7 @@
                     </nz-select>
                     <nz-input-number class="w120" [nzMin]="0" [nzMax]="99999" [nzStep]="0.1" nzPlaceHolder="商品成本金额" [(ngModel)]="chooseInfo.price" name="price">
                     </nz-input-number>
-                    <nz-input-number class="w120" [nzMin]="0" [nzMax]="99999" [nzStep]="0.1" nzPlaceHolder="商品租金/天" [(ngModel)]="chooseInfo.out_price" name="out_price">
-                    </nz-input-number>
+                    <input class="w120" nz-input placeholder="商品租金/天" [(ngModel)]="chooseInfo.out_price" name="out_price" readonly="true" />
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>

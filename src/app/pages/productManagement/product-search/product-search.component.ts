@@ -16,7 +16,7 @@ export class ProductSearchComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1950px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2050px' };
 	result = []; // 查询结果
 	loading = true;
 	total = 0;

@@ -39,19 +39,20 @@
             <th nzWidth="100px" nzAlign="left">设备价格</th>
             <th nzWidth="100px" nzAlign="left">出租价格</th>
             <th nzWidth="100px" nzAlign="left">状态</th>
-            <th nzWidth="100px" nzAlign="left">所属部门</th>
             <th nzWidth="200px" nzAlign="left">所属分类</th>
-            
             <th nzWidth="100px" nzAlign="left">来源</th>
-            
             <th nzWidth="200px" nzAlign="left">入库时间</th>
+            <th nzWidth="200px" nzAlign="left">商品备注</th>
             <th nzWidth="300px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of result">
+        <tr *ngFor="let item of result" [ngClass]="{'sells':item.is_sells === '1'}">
             <td>{{item.id}}</td>
-            <td nzLeft="0px"><span class="w200 ellipsis">{{item.name}}</span></td>
+            <td nzLeft="0px" [ngClass]="{'c_red':item.is_sells === '1'}">
+                <span class="w200 ellipsis">{{item.name}}</span>
+                <b *ngIf="item.is_sells === '1'"> (已买断)</b>
+            </td>
             <td>
                 <nz-progress
                     [nzPercent]="item.nhl"
@@ -65,7 +66,6 @@
             </td>
             <td>{{item.price}}</td>
             <td>{{item.out_price}}</td>
-            <td>{{item.department}}</td>
             <td>
                 <a [ngClass]="{'c_green':item.is_sell === '1','c_orange':item.is_sell === '0'}" (click)="viewOrder(item)">{{item.is_sell === '1'?'租赁中 ...':'未租'}}</a>
             </td>
@@ -80,14 +80,17 @@
             </td>
             <td>{{common.adminListTranslate(item.origin)}}</td>
             <td>{{item.creat_time}}</td>
+            <td>{{item.des}}</td>
             <td nzRight="0px">
-                <a (click)="Edit(item)">编辑</a>
-                <nz-divider nzType="vertical"></nz-divider>
-                <a (click)="viewLeaseHistory(item)">历史租赁记录</a>
-                <!-- <nz-divider nzType="vertical"></nz-divider>
-                <a>损坏</a> -->
-                <nz-divider nzType="vertical"></nz-divider>
-                <a nzType="danger" (click)="deleteDevice(item)"><i nz-icon nzType="delete"></i>删除</a>
+                <span *ngIf="item.is_sells !== '1'">
+                    <a (click)="Edit(item)">编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="viewLeaseHistory(item)">历史租赁记录</a>
+                    <!-- <nz-divider nzType="vertical"></nz-divider>
+                    <a>损坏</a> -->
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a nzType="danger" (click)="deleteDevice(item)"><i nz-icon nzType="delete"></i>删除</a>
+                </span>
             </td>
         </tr>
     </tbody>

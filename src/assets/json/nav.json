@@ -152,5 +152,16 @@
                 "url": "UserCreditSearch"
             }
         ]
+    },
+    {
+        "name": "微信小程序",
+        "ico": "wechat",
+        "child": [
+            {
+                "name": "活动管理",
+                "selected": false,
+                "url": "WechatActiveManagement"
+            }
+        ]
     }
 ]

@@ -9,12 +9,16 @@
 </div>
 <nz-drawer [nzVisible]="visible" [nzWidth]="500" [nzClosable]="false" (nzOnClose)="close()">
     <p>
-        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-            <input type="text" nz-input [(ngModel)]="classifyEditData.name" />
+        <nz-input-group  nzCompact>
+            <input type="text" class="w160" nz-input [(ngModel)]="classifyEditData.name" placeholder="名称" />
+            <nz-select class="w120" [(ngModel)]="classifyEditData.manufactor" nzAllowClear nzPlaceHolder="请选择厂家" *ngIf="!classifyEditData.classify_a_id">
+                <nz-option nzValue="{{item.name}}" nzLabel="{{item.name}}" *ngFor="let item of common.manufactor"></nz-option>
+            </nz-select>
+            <nz-select class="w120" [(ngModel)]="classifyEditData.classify_type" nzAllowClear nzPlaceHolder="请选择类型" *ngIf="classifyEditData.classify_a_id">
+                <nz-option nzValue="{{item.id}}" nzLabel="{{item.name}}" *ngFor="let item of common.classifyType"></nz-option>
+            </nz-select>
+            <button nz-button nzType="primary" (click)="modifyName()"><i nz-icon nzType="save"></i></button>
         </nz-input-group>
-        <ng-template #suffixIconButton>
-            <button nz-button nzType="primary" nzSearch (click)="modifyName()"><i nz-icon nzType="save"></i></button>
-        </ng-template>
     </p>
     <nz-descriptions [nzColumn]="2" nzTitle="分类信息">
         <nz-descriptions-item nzTitle="分类ID" [nzSpan]="1">{{classifyEditData.id}}</nz-descriptions-item>
@@ -26,28 +30,101 @@
         删除该分类
     </button>
     <nz-divider></nz-divider>
-    <div nz-row>
-        <div nz-col>
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="12">
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">分类设备买断价: </nz-form-label>
-                <nz-form-control [nzSpan]="14">
-                    <nz-input-number [(ngModel)]="deviceSellInfo.price" name="price" class="100p" [disabled]="true"></nz-input-number> 元
+                <nz-form-label [nzSpan]="6">买断价</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.productPrice" name="productPrice" class="100p"></nz-input-number> 元
                 </nz-form-control>
             </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">分类设备租金: </nz-form-label>
-                <nz-form-control [nzSpan]="14">
-                    <nz-input-number [(ngModel)]="deviceSellInfo.outerPrice" name="outerPrice" class="100p"></nz-input-number> 元
+                <nz-form-label [nzSpan]="6">租金</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.productRent" name="productRent" class="100p"></nz-input-number> 元
                 </nz-form-control>
             </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">分类设备备注: </nz-form-label>
-                <nz-form-control [nzSpan]="14">
+                <nz-form-label [nzSpan]="6">押金</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.productDeposit" name="productDeposit" class="100p"></nz-input-number> 元
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">天数</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.productDays" name="productDays" class="100p"></nz-input-number> 天
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">容量</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.productCapacity" name="productCapacity" class="100p"></nz-input-number> G
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">备注</nz-form-label>
+                <nz-form-control [nzSpan]="18">
                     <input nz-input [(ngModel)]="deviceSellInfo.des" name="des" class="100p" />
                 </nz-form-control>
             </nz-form-item>
         </div>
-        <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
+        <div nz-col [nzSpan]="12">
+            <button nz-button [nzLoading]="isSpinning" type="button" class="ant-btn ant-btn-primary" (click)="editDeviceOuterPirce()"><span>保存</span></button>
+        </div>
+    </div>
+    <nz-divider></nz-divider>
+    <div nz-row>
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label>封面上传</nz-form-label>
+                <nz-form-control>
+                    <nz-upload
+                        class="avatar-uploader"
+                        nzAction="http://122.114.177.171:8180/imgUpload/upload"
+                        nzName="file"
+                        nzListType="picture-card"
+                        [nzShowUploadList]="false"
+                        [nzBeforeUpload]="common.beforeUpload"
+                        (nzChange)="changeAvatar($event)"
+                    >
+                    <ng-container *ngIf="!avatarUrl">
+                        <i class="upload-icon" nz-icon></i>
+                        <div class="ant-upload-text">封面</div>
+                    </ng-container>
+                    <img *ngIf="avatarUrl" [src]="'https://www.zudequ.com/cmd/images/' + avatarUrl" class="avatar" />
+                    </nz-upload>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label>描述图片上传</nz-form-label>
+                <nz-form-control>
+                    <nz-upload
+                        class="upload-list-inline"
+                        nzAction="http://122.114.177.171:8180/imgUpload/upload"
+                        nzListType="picture"
+                        [(nzFileList)]="desImgList"
+                        (nzChange)="changeDesImg($event)"
+                    >
+                        <button nz-button>
+                        <span><i nz-icon nzType="upload"></i> 上传 (描述图片)</span>
+                        </button>
+                    </nz-upload>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
     </div>
     <nz-divider *ngIf="hasAddSub"></nz-divider>
     <div nz-row *ngIf="hasAddSub">

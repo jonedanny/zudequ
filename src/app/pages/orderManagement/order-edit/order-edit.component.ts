@@ -56,6 +56,8 @@ export class OrderEditComponent implements OnInit {
 	displayBuyoutColumn = false; // 买断提示
 	orderDetail = []; // 订单明细
 
+	synchronizationTime = 0; // 同步租赁时间 缩短或延迟
+
 	/***
 	 * 提前完成订单的参数
 	 */
@@ -452,5 +454,21 @@ export class OrderEditComponent implements OnInit {
 				return this.adminList[i].name;
 			}
 		}
+	}
+	// 时间同步
+	synchronizationTimeDate() {
+		console.log(this.editData);
+		const start = this.changeDateTiem(this.editData.start, this.synchronizationTime);
+		const end = this.changeDateTiem(this.editData.end, this.synchronizationTime);
+		this.editData.start = start;
+		this.editData.end = end;
+	}
+	// 加减时间
+	changeDateTiem(date,days) {
+		const d = new Date(date);
+		d.setDate(d.getDate() + days);
+		console.log(d.getDate(), days);
+		const m = d.getMonth() + 1;
+		return d.getFullYear() + '-' + m + '-' + d.getDate();
 	}
 }

@@ -33,6 +33,7 @@ import { GameAddComponent } from './pages/gameManager/game-add/game-add.componen
 import { GameListComponent } from './pages/gameManager/game-list/game-list.component';
 import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/game-option-edit.component';
 
+import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
 
 const routes: Routes = [
 	{ path:'', component:LoginComponent },
@@ -68,7 +69,9 @@ const routes: Routes = [
 		// 用户管理
 		{ path: 'UserPowerManagement', component: UserProwerManagementComponent },
 		{ path: 'UserListSearch', component: UserListSearchComponent },
-		{ path: 'UserCreditSearch', component: UserCreditSearchComponent }
+		{ path: 'UserCreditSearch', component: UserCreditSearchComponent },
+		// 微信小程序
+		{ path: 'WechatActiveManagement', component: WechatActiveManagementComponent },
 	] },
 ];
 

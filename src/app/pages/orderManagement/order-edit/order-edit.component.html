@@ -122,6 +122,12 @@
             <nz-date-picker class="w160" [ngModel]="editData.end" (ngModelChange)="changedate($event,'end')">
             </nz-date-picker>
         </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="日期同步" [nzSpan]="2">
+            <nz-input-group>
+                <nz-input-number [(ngModel)]="synchronizationTime" [nzMin]="-99" [nzMax]="99" [nzStep]="1"></nz-input-number>
+                <button nz-button nzType="default" class="ml-10" (click)="synchronizationTimeDate()">确定</button>
+            </nz-input-group>
+        </nz-descriptions-item>
         <nz-descriptions-item nzTitle="商品移除" [nzSpan]="2">
             <div id="device-list">
                 <nz-spin nzSimple *ngIf="editData.option === null"></nz-spin>

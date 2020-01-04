@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RequsetService } from '../service/requset.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, Observer } from 'rxjs';
+import { UploadFile } from 'ng-zorro-antd/upload';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Injectable({
 	providedIn: 'root'
@@ -9,6 +11,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 export class CommonDataService {
 
 	constructor(
+		private message: NzMessageService,
 		private Requset: RequsetService,
 		private modal: NzModalService
 	) { }
@@ -187,6 +190,47 @@ export class CommonDataService {
 		{ id: 2, name: '白租' },
 		{ id: 3, name: '工作室' }
 	];
+	// 品牌列表
+	manufactor = [
+		{ id: 0, name: '索尼' },
+		{ id: 1, name: '任天堂' },
+		{ id: 2, name: '微软' },
+		{ id: 3, name: '罗技' },
+		{ id: 4, name: '会员卡' },
+		{ id: 5, name: '其他' }	,
+		{ id: 6, name: '测试品牌' }	
+	];
+	// 设备分类
+	classifyType = [
+		{ id: 1, name: '主机' },
+		{ id: 2, name: '游戏' },
+		{ id: 3, name: '周边' },
+		{ id: 4, name: '配件' }
+	];
+	/**
+	 * 活动类型
+	 * 1 活动广告 链接商品 (多张图)
+	 * 2 新货上架 图文外链
+	 * 3 最新活动 图文外链
+	 * 4 当下爆品 链接商品
+	 * 5 首页通知 最多5条文字滚动
+	 */
+	activeType = [
+		{ id: 1, name: '活动广告' },
+		{ id: 2, name: '新货上架' },
+		{ id: 3, name: '最新活动' },
+		{ id: 4, name: '当下爆品' },
+		{ id: 5, name: '首页通知' }
+	];
+	/**
+	 * 商品大类
+	 */
+	productClass = [
+		{ id: 1, name: '主机类' },
+		{ id: 2, name: '游戏类' },
+		{ id: 3, name: '周边类' }
+	];
+
 	//计算天数差的函数，通用  
 	DateDiff(sDate) {    //sDate1和sDate2是xxxx-xx-xx格式  
 		const d1 = new Date(sDate.replace(/\-/g, '/'));
@@ -222,6 +266,53 @@ export class CommonDataService {
 			nzOnOk: () => {
 				callback();
 			}
+		});
+	}
+	// 图片上传
+	beforeUpload = (file: File) => {
+		return new Observable((observer: Observer<boolean>) => {
+			// const isJPG = file.type === 'image/jpeg';
+			// if (!isJPG) {
+			// 	this.message.error('You can only upload JPG file!');
+			// 	observer.complete();
+			// 	return;
+			// }
+			const isLt2M = file.size / 1024 / 1024 < 2;
+			if (!isLt2M) {
+				this.message.error('Image must smaller than 2MB!');
+				observer.complete();
+				return;
+			}
+			// check height
+			this.checkImageDimension(file).then(dimensionRes => {
+				if (!dimensionRes) {
+					this.message.error('Image only 300x300 above');
+					observer.complete();
+					return;
+				}
+
+				observer.next(isLt2M && dimensionRes);
+				observer.complete();
+			});
+		});
+	};
+
+	getBase64(img: File, callback: (img: string) => void): void {
+		const reader = new FileReader();
+		reader.addEventListener('load', () => callback(reader.result!.toString()));
+		reader.readAsDataURL(img);
+	}
+
+	checkImageDimension(file: File): Promise<boolean> {
+		return new Promise(resolve => {
+			const img = new Image(); // create image
+			img.src = window.URL.createObjectURL(file);
+			img.onload = () => {
+				const width = img.naturalWidth;
+				const height = img.naturalHeight;
+				window.URL.revokeObjectURL(img.src!);
+				resolve(true);
+			};
 		});
 	}
 }
