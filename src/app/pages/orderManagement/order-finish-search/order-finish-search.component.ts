@@ -28,7 +28,8 @@ export class OrderFinishSearchComponent implements OnInit {
 		origin: '',
 		des: '',
 		relativePeople: '',
-		completed: 1
+		completed: 1,
+		flag: ''
 	};
 	departmentList = null; // 部门列表
 	orderDetail = []; //订单明细

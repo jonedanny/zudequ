@@ -19,6 +19,14 @@
                 <nz-option *ngFor="let item of adminList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
             </nz-select>
         </div>
+        <div nz-col nzSpan="2">
+            <nz-select nzAllowClear nzPlaceHolder="标记" name="flag" class="w100p"
+                [(ngModel)]="fillterData.flag">
+                <nz-option nzValue="" nzLabel="全部"></nz-option>
+                <nz-option nzValue="1" nzLabel="已标记"></nz-option>
+                <nz-option nzValue="0" nzLabel="未标记"></nz-option>
+            </nz-select>
+        </div>
         <div nz-col nzSpan="4">
             <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
         </div>
@@ -46,8 +54,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of result">
-            <td nzLeft="0px">{{item.id}}</td>
+        <tr *ngFor="let item of result; let i = index">
+            <td nzLeft="0px" class="pointer" (click)="orderCareful(i, item)">
+                <i nz-icon nzType="star" nzTheme="outline" *ngIf="item.flag_careful === '0'"></i>
+                <i nz-icon nzType="star" nzTheme="twotone" *ngIf="item.flag_careful === '1'"></i>
+                {{item.id}}
+            </td>
             <td>{{item.start}} / {{item.end}}</td>
             <td>{{common.DateDiffNormal(item.start,item.end)}}</td>
             <td>{{item.money}}</td>

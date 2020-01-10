@@ -62,7 +62,7 @@
             </td>
             <td>
                 {{item.ljsy || 0}} / {{item.price || 0}}
-                <nz-progress [nzPercent]="item.ljsy ? item.ljsy / item.price * 100 : 0" nzStatus="exception"></nz-progress>
+                <nz-progress [nzPercent]="item.ljsy ? item.ljsy / item.price * 100 : 0" nzStatus="{{item.ljsy / item.price * 100 > 100 ? '' : 'exception'}}"></nz-progress>
             </td>
             <td>{{item.price}}</td>
             <td>{{item.out_price}}</td>

@@ -1,0 +1,43 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input [(ngModel)]="fillterData.taobaoId" placeholder="淘宝ID" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="80px">ID</th>
+            <th nzWidth="200px">淘宝ID</th>
+            <th nzWidth="150px">游戏分类</th>
+            <th nzWidth="150px">游戏容量</th>
+            <th nzWidth="150px">实际容量</th>
+            <th nzWidth="400px">游戏列表</th>
+            <th nzWidth="200px">生成时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>{{item.taobao_id}}</td>
+            <td>{{item.ganme_classify}}</td>
+            <td>{{item.game_container}} G</td>
+            <td>{{item.real_container}} G</td>
+            <td>
+                <nz-collapse>
+                    <nz-collapse-panel nzHeader="查看明细 ( {{item.games_number}} )" >
+                        <p *ngFor="let panel of item.game_list">{{panel.n}} {{panel.c}}G</p>
+                    </nz-collapse-panel>
+                </nz-collapse>
+            </td>
+            <td>{{item.time}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

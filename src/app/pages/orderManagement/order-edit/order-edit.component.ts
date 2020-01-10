@@ -30,7 +30,8 @@ export class OrderEditComponent implements OnInit {
 		des: '',
 		relativePeople: '',
 		completed: 0,
-		sort: null
+		sort: null,
+		flag: ''
 	};
 	fillterDataCopy = JSON.parse(JSON.stringify(this.fillterData));
 	departmentList = null; // 部门列表
@@ -116,6 +117,7 @@ export class OrderEditComponent implements OnInit {
 				this.total = res.total;
 			}
 			this.loading = false;
+			console.log(this.result);
 		});
 	}
 	// 排序
@@ -470,5 +472,23 @@ export class OrderEditComponent implements OnInit {
 		console.log(d.getDate(), days);
 		const m = d.getMonth() + 1;
 		return d.getFullYear() + '-' + m + '-' + d.getDate();
+	}
+	// 订单关注
+	orderCareful(index, item) {
+		console.log(index, item);
+		const flag = item.flag_careful === '1' ? '0' : '1';
+		this.loading = true;
+		this.Requset.post$('ordermanager/signOrder', {orderId: item.id, flag: flag}).subscribe(res => {
+			console.log(res);
+			if(res.success) {
+				if(flag === '1') {
+					this.message.success('已添加标记');
+				} else {
+					this.message.success('已取消标记');
+				}
+				this.result[index].flag_careful = flag;
+			}
+			this.loading = false;
+		});
 	}
 }

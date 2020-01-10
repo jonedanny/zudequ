@@ -1,22 +1,10 @@
 <div class="table-operations">
     <nz-input-group>
-        <div nz-col nzSpan="2">
-            <input type="text" nz-input [(ngModel)]="fillterData.orderId" placeholder="订单号" />
-        </div>
-        <div nz-col nzSpan="4">
-            <input type="text" nz-input [(ngModel)]="fillterData.option" placeholder="商品名" />
-        </div>
         <div nz-col nzSpan="4">
             <input type="text" nz-input [(ngModel)]="fillterData.origin" placeholder="付款途径" />
         </div>
         <div nz-col nzSpan="4">
             <input type="text" nz-input [(ngModel)]="fillterData.des" placeholder="备注" />
-        </div>
-        <div nz-col nzSpan="4">
-            <nz-select nzAllowClear nzPlaceHolder="相关租赁人" name="origin" class="w100p" [(ngModel)]="fillterData.relativePeople">
-                <nz-option nzValue="" nzLabel="请选择相关租赁人"></nz-option>
-                <nz-option *ngFor="let item of adminList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
-            </nz-select>
         </div>
         <div nz-col nzSpan="4">
             <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
@@ -26,24 +14,26 @@
 <nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
     [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
     (nzPageIndexChange)="search()">
-    <thead>
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
-            <th nzWidth="100px" nzLeft="0px">订单ID</th>
-            <th nzWidth="250px">出租时间</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="id" nzLeft="0px">订单ID</th>
+            <th nzWidth="250px" nzShowSort nzSortKey="end">出租时间</th>
             <th nzWidth="100px">天数</th>
-            <th nzWidth="100px">租金</th>
-            <th nzWidth="100px">押金</th>
-            <th nzWidth="150px">付款途径</th>
-            <th nzWidth="200px">趣币会员</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="money">租金</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="deposit">押金</th>
+            <th nzWidth="200px">付款途径</th>
+            <th nzWidth="250px">地址</th>
+            <th nzWidth="150px">趣币会员</th>
             <th nzWidth="100px">订单项目</th>
-            <th nzWidth="150px">所属部门</th>
+            <th nzWidth="100px">所属部门</th>
+            <th nzWidth="100px">订单来源</th>
             <th nzWidth="100px">操作员</th>
             <th nzWidth="250px">备注</th>
-            <th nzWidth="100px" nzAlign="left" nzRight="0px">操作</th>
+            <th nzWidth="200px">创建时间</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of result">
+        <tr *ngFor="let item of result; let i = index">
             <td nzLeft="0px">
                 <i nz-icon nzType="star" nzTheme="outline" *ngIf="item.flag_careful === '0'"></i>
                 <i nz-icon nzType="star" nzTheme="twotone" *ngIf="item.flag_careful === '1'"></i>
@@ -54,26 +44,33 @@
             <td>{{item.money}}</td>
             <td>{{item.deposit}}</td>
             <td>{{item.origin}}</td>
+            <td></td>
             <td>{{item.phone}}</td>
             <td>
-                <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" (nzVisibleChange)="viewOrderDetail($event,item)">
+                <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
+                    (nzVisibleChange)="viewOrderDetail($event,item,true)">
                     查看明细
                 </a>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <div class="c_orange" *ngIf="editData && editData.option !== null && editData.option.length === 0"><i nz-icon nzType="info-circle" nzTheme="outline"></i> 没有找到相关数据</div>
                     <ul nz-menu nzSelectable>
-                        <li nz-menu-item *ngIf="orderDetail.length === 0"><nz-spin nzSimple></nz-spin></li>
-                        <li nz-menu-item *ngFor="let item of orderDetail">
-                            ID: {{item.pid}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [租金: {{item.rent || '未知'}}] [{{item.userName}}]
+                        <li nz-menu-item *ngIf="orderDetail.length === 0">
+                            <nz-spin nzSimple></nz-spin>
+                        </li>
+                        <li nz-menu-item *ngFor="let item of orderDetail" [ngClass]="{'c_orange': item.is_back === '1','c_red':item.is_sell === '1'}">
+                            ID: {{item.cid}} {{item.z_name}} [{{item.start_time}} / {{item.end_time}}] [租金:
+                            {{item.rent || '未知'}}]
+                            <span *ngIf="item.is_back === '1'">[已归还]</span>
+                            <span *ngIf="item.is_sell === '1'">[已买断]</span>
                         </li>
                     </ul>
                 </nz-dropdown-menu>
             </td>
             <td>{{__departmentText(item.department)}}</td>
+            <td>{{item.store}}</td>
             <td>{{item.opteration}}</td>
             <td>{{item.des}}</td>
-            <td nzRight="0px">
-                <a (click)="printOrder(item)">打印</a>
-            </td>
+            <td>{{item.addTime}}</td>
         </tr>
     </tbody>
 </nz-table>

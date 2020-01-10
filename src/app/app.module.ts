@@ -25,6 +25,7 @@ import { ProductSearchComponent } from './pages/productManagement/product-search
 import { OrderCreatComponent } from './pages/orderManagement/order-creat/order-creat.component';
 import { OrderEditComponent } from './pages/orderManagement/order-edit/order-edit.component';
 import { OrderFinishSearchComponent } from './pages/orderManagement/order-finish-search/order-finish-search.component';
+import { OrderUnpayComponent } from './pages/orderManagement/order-unpay/order-unpay.component';
 
 import { QbEidtComponent } from './pages/qbManagement/qb-eidt/qb-eidt.component';
 
@@ -45,6 +46,7 @@ import { SoldDeviceListComponent } from './pages/sellManager/sold-device-list/so
 import { GameAddComponent } from './pages/gameManager/game-add/game-add.component';
 import { GameListComponent } from './pages/gameManager/game-list/game-list.component';
 import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/game-option-edit.component';
+import { GameCustomerChooseComponent } from './pages/gameManager/game-customer-choose/game-customer-choose.component';
 
 import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
 
@@ -77,7 +79,9 @@ registerLocaleData(zh);
 		GameAddComponent,
 		GameListComponent,
 		GameOptionEditComponent,
-		WechatActiveManagementComponent
+		WechatActiveManagementComponent,
+		GameCustomerChooseComponent,
+		OrderUnpayComponent
 	],
 	imports: [
 		BrowserModule,
