@@ -31,9 +31,9 @@
                 "url": "OrderCreat"
             },
             {
-                "name": "未付款订单",
+                "name": "准备中订单",
                 "selected": false,
-                "url": "OrderUnpay"
+                "url": "OrderReady"
             },
             {
                 "name": "租赁中订单",
@@ -44,6 +44,11 @@
                 "name": "完结订单查询",
                 "selected": false,
                 "url": "OrderFinishSearch"
+            },
+            {
+                "name": "订单退款查询",
+                "selected": false,
+                "url": "OrderRealRefund"
             }
         ]
     },
@@ -171,6 +176,11 @@
                 "name": "活动管理",
                 "selected": false,
                 "url": "WechatActiveManagement"
+            },
+            {
+                "name": "文章管理",
+                "selected": false,
+                "url": "WechatArticleManagementComponent"
             }
         ]
     }

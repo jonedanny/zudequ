@@ -12,7 +12,8 @@ import { ProductSearchComponent } from './pages/productManagement/product-search
 import { OrderCreatComponent } from './pages/orderManagement/order-creat/order-creat.component';
 import { OrderEditComponent } from './pages/orderManagement/order-edit/order-edit.component';
 import { OrderFinishSearchComponent } from './pages/orderManagement/order-finish-search/order-finish-search.component';
-import { OrderUnpayComponent } from './pages/orderManagement/order-unpay/order-unpay.component';
+import { OrderReadyComponent } from './pages/orderManagement/order-ready/order-ready.component';
+import { OrderRealRefundComponent } from './pages/orderManagement/order-real-refund/order-real-refund.component';
 
 import { QbEidtComponent } from './pages/qbManagement/qb-eidt/qb-eidt.component';
 
@@ -36,6 +37,7 @@ import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/ga
 import { GameCustomerChooseComponent } from './pages/gameManager/game-customer-choose/game-customer-choose.component';
 
 import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
+import { WechatArticleManagementComponent } from './pages/wechat/wechat-article-management/wechat-article-management.component';
 
 const routes: Routes = [
 	{ path:'', component:LoginComponent },
@@ -49,9 +51,10 @@ const routes: Routes = [
 		{ path: 'LeaseInfoView', component: LeaseInfoViewComponent },
 		// 订单管理
 		{ path: 'OrderCreat', component: OrderCreatComponent },
-		{ path: 'OrderUnpay', component: OrderUnpayComponent },
+		{ path: 'OrderReady', component: OrderReadyComponent },
 		{ path: 'OrderEdit', component: OrderEditComponent },
 		{ path: 'OrderFinishSearch', component: OrderFinishSearchComponent },
+		{ path: 'OrderRealRefund', component: OrderRealRefundComponent },
 		// 销售管理
 		{ path: 'SellCreat', component: SellCreatComponent },
 		{ path: 'SoldDeviceList', component: SoldDeviceListComponent },
@@ -76,6 +79,7 @@ const routes: Routes = [
 		{ path: 'UserCreditSearch', component: UserCreditSearchComponent },
 		// 微信小程序
 		{ path: 'WechatActiveManagement', component: WechatActiveManagementComponent },
+		{ path: 'WechatArticleManagementComponent', component: WechatArticleManagementComponent },
 	] },
 ];
 

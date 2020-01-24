@@ -1,0 +1,33 @@
+.is-pay {
+    font-size: 22px;
+}
+.un-pay {
+    font-size: 22px;
+    color: #ddd;
+}
+.fit-out {
+    overflow: hidden;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #eee;
+}
+.fit-out span {
+    display: block;
+    text-align: center;
+}
+.pro-img {
+    width: 100%;
+}
+.pro-img img {
+    width: 100px;
+}
+.fit-out > div:nth-child(1) {
+    width: 100px;
+}
+.fit-out > div:nth-child(2) {
+    width: 270px;
+}
+.fit-out > div:nth-child(2) span {
+    text-align: left;
+    margin-bottom: 10px;
+}

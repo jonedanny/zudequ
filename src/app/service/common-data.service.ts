@@ -231,6 +231,30 @@ export class CommonDataService {
 		{ id: 3, name: '周边类' }
 	];
 
+	/**
+	 * 小程序订单状态
+	 */
+	weixinOrderStatus = [
+		{ id: 1, name: '未付款' },
+		{ id: 2, name: '已付款' }
+	];
+
+	/**
+	 *  订单状态
+	 * (1:未付款 2:已付款 3:租赁中 4:归还中 5:已完成 6:运输中 7:续租中 8:逾期中 9:已买断)
+	 */
+	orderStatus = [
+		{ id: 1, name: '未付款' },
+		{ id: 2, name: '已付款' },
+		{ id: 3, name: '租赁中' },
+		{ id: 4, name: '归还中' },
+		{ id: 5, name: '已完成' },
+		{ id: 6, name: '运输中' },
+		{ id: 7, name: '续租中' },
+		{ id: 8, name: '逾期中' },
+		{ id: 9, name: '已买断' }
+	];
+
 	//计算天数差的函数，通用  
 	DateDiff(sDate) {    //sDate1和sDate2是xxxx-xx-xx格式  
 		const d1 = new Date(sDate.replace(/\-/g, '/'));

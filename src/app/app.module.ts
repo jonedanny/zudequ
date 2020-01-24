@@ -13,6 +13,8 @@ import { registerLocaleData, HashLocationStrategy, LocationStrategy } from '@ang
 import { NgxEchartsModule } from 'ngx-echarts';
 import zh from '@angular/common/locales/zh';
 
+import { UMeditorModule } from 'ngx-umeditor';
+
 import { LoginComponent } from './login/login.component';
 import { LayoutComponent } from './layout/layout.component';
 
@@ -25,7 +27,8 @@ import { ProductSearchComponent } from './pages/productManagement/product-search
 import { OrderCreatComponent } from './pages/orderManagement/order-creat/order-creat.component';
 import { OrderEditComponent } from './pages/orderManagement/order-edit/order-edit.component';
 import { OrderFinishSearchComponent } from './pages/orderManagement/order-finish-search/order-finish-search.component';
-import { OrderUnpayComponent } from './pages/orderManagement/order-unpay/order-unpay.component';
+import { OrderReadyComponent } from './pages/orderManagement/order-ready/order-ready.component';
+import { OrderRealRefundComponent } from './pages/orderManagement/order-real-refund/order-real-refund.component';
 
 import { QbEidtComponent } from './pages/qbManagement/qb-eidt/qb-eidt.component';
 
@@ -49,6 +52,8 @@ import { GameOptionEditComponent } from './pages/gameManager/game-option-edit/ga
 import { GameCustomerChooseComponent } from './pages/gameManager/game-customer-choose/game-customer-choose.component';
 
 import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
+import { WechatArticleManagementComponent } from './pages/wechat/wechat-article-management/wechat-article-management.component';
+
 
 
 registerLocaleData(zh);
@@ -81,10 +86,13 @@ registerLocaleData(zh);
 		GameOptionEditComponent,
 		WechatActiveManagementComponent,
 		GameCustomerChooseComponent,
-		OrderUnpayComponent
+		OrderReadyComponent,
+		WechatArticleManagementComponent,
+		OrderRealRefundComponent
 	],
 	imports: [
 		BrowserModule,
+		UMeditorModule.forRoot(),
 		AppRoutingModule,
 		NgZorroAntdModule,
 		FormsModule,

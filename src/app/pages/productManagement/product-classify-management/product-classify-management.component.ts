@@ -164,18 +164,18 @@ export class ProductClassifyManagementComponent implements OnInit {
 			b = this.classifyEditData.classify_b_id;
 			c = this.classifyEditData.id;
 		}
-		if (!this.deviceSellInfo.productRent || this.deviceSellInfo.productRent === null || this.deviceSellInfo.productRent <= 0) {
-			if(!this.deviceSellInfo.productCapacity || this.deviceSellInfo.productCapacity <= 0) {
-				this.message.warning('请填写正确设备租金');
-				return;
-			}
-		}
-		if (!this.deviceSellInfo.productPrice || this.deviceSellInfo.productPrice === null || this.deviceSellInfo.productPrice <= 0) {
-			if(!this.deviceSellInfo.productCapacity || this.deviceSellInfo.productCapacity <= 0) {
-				this.message.warning('请填写正确设备买断价格');
-				return;
-			}
-		}
+		// if (!this.deviceSellInfo.productRent || this.deviceSellInfo.productRent === null || this.deviceSellInfo.productRent <= 0) {
+		// 	if(!this.deviceSellInfo.productCapacity || this.deviceSellInfo.productCapacity <= 0) {
+		// 		this.message.warning('请填写正确设备租金');
+		// 		return;
+		// 	}
+		// }
+		// if (!this.deviceSellInfo.productPrice || this.deviceSellInfo.productPrice === null || this.deviceSellInfo.productPrice <= 0) {
+		// 	if(!this.deviceSellInfo.productCapacity || this.deviceSellInfo.productCapacity <= 0) {
+		// 		this.message.warning('请填写正确设备买断价格');
+		// 		return;
+		// 	}
+		// }
 		const data = {
 			"version": "1.0",
 			"modular": "product",

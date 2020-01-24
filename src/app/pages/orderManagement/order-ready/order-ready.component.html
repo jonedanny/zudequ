@@ -7,6 +7,12 @@
             <input type="text" nz-input [(ngModel)]="fillterData.des" placeholder="备注" />
         </div>
         <div nz-col nzSpan="4">
+            <nz-select class="w100p" nzAllowClear nzPlaceHolder="请选择状态" name="status" [(ngModel)]="fillterData.status">
+                <nz-option nzValue="" nzLabel="全部"></nz-option>
+                <nz-option *ngFor="let item of common.weixinOrderStatus" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="4">
             <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
         </div>
     </nz-input-group>
@@ -17,12 +23,13 @@
     <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
             <th nzWidth="100px" nzShowSort nzSortKey="id" nzLeft="0px">订单ID</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="status">状态</th>
             <th nzWidth="250px" nzShowSort nzSortKey="end">出租时间</th>
             <th nzWidth="100px">天数</th>
             <th nzWidth="100px" nzShowSort nzSortKey="money">租金</th>
             <th nzWidth="100px" nzShowSort nzSortKey="deposit">押金</th>
-            <th nzWidth="200px">付款途径</th>
-            <th nzWidth="250px">地址</th>
+            <th nzWidth="150px">付款途径</th>
+            <th nzWidth="150px">地址</th>
             <th nzWidth="150px">趣币会员</th>
             <th nzWidth="100px">订单项目</th>
             <th nzWidth="100px">所属部门</th>
@@ -30,6 +37,7 @@
             <th nzWidth="100px">操作员</th>
             <th nzWidth="250px">备注</th>
             <th nzWidth="200px">创建时间</th>
+            <th nzWidth="150px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
     </thead>
     <tbody>
@@ -39,12 +47,31 @@
                 <i nz-icon nzType="star" nzTheme="twotone" *ngIf="item.flag_careful === '1'"></i>
                 {{item.id}}
             </td>
+            <td>
+                <i nz-icon nzType="money-collect" nzTheme="twotone" *ngIf="item.status === '2'" class="is-pay"></i>
+                <i nz-icon nzType="money-collect" nzTheme="outline" *ngIf="item.status === '1'" class="un-pay"></i>
+            </td>
             <td>{{item.start}} / {{item.end}}</td>
             <td>{{common.DateDiffNormal(item.start,item.end)}}</td>
             <td>{{item.money}}</td>
             <td>{{item.deposit}}</td>
             <td>{{item.origin}}</td>
-            <td></td>
+            <td>
+                <a nz-dropdown [nzDropdownMenu]="address" nzTrigger="click"
+                    (nzVisibleChange)="viewAddressDetail($event,item)">
+                    查看地址
+                </a>
+                <nz-dropdown-menu #address="nzDropdownMenu">
+                    <ul nz-menu nzSelectable>
+                        <li nz-menu-item *ngIf="!customerAddress.address">
+                            <nz-spin nzSimple></nz-spin>
+                        </li>
+                        <li nz-menu-item *ngIf="customerAddress.name">客户姓名: {{customerAddress.name}}</li>
+                        <li nz-menu-item *ngIf="customerAddress.phone">客户电话: {{customerAddress.phone}}</li>
+                        <li nz-menu-item *ngIf="customerAddress.address">客户地址: {{customerAddress.address}}</li>
+                    </ul>
+                </nz-dropdown-menu>
+            </td>
             <td>{{item.phone}}</td>
             <td>
                 <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
@@ -71,7 +98,38 @@
             <td>{{item.opteration}}</td>
             <td>{{item.des}}</td>
             <td>{{item.addTime}}</td>
+            <td nzRight="0px">
+                <a *ngIf="item.status === '2'" (click)="fitOut(item)">开始装配</a>
+                <a *ngIf="item.status === '1'">删除</a>
+            </td>
         </tr>
     </tbody>
 </nz-table>
 <ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" [nzWidth]="450" nzTitle="订单装配" (nzOnClose)="visible = false">
+    <div class="flex-between fit-out" *ngFor="let item of fitOutList">
+        <div>
+            <span class="pro-img">
+                <img [src]="'https://www.zudequ.com/cmd/images/' + item.z_img" />
+            </span>
+            <span>{{item.z_name}}</span>
+        </div>
+        <div>
+            <span>
+                明细ID: {{item.id}}
+                <i *ngIf="!item.pid" class="c_grey" nz-icon nzType="close-circle" nzTheme="outline"></i>
+                <i *ngIf="item.pid" nz-icon nzType="check-circle" nzTheme="twotone"></i>
+            </span>
+            <span>租金: {{item.rent}} / 天</span>
+            <span><input nz-input type="text" placeholder="请扫码设备名" [(ngModel)]="item.p_name" /></span>
+            <span>
+                <button nz-button [nzLoading]="loading" (click)="fitOutItem(item)">
+                    <i nz-icon nzType="codepen" nzTheme="outline"></i>装配
+                </button>
+            </span>
+        </div>
+    </div>
+    <button nz-button nzType="primary" [nzLoading]="loading" (click)="outItem()">
+        <i nz-icon nzType="thunderbolt" nzTheme="outline"></i>发货
+    </button>
+</nz-drawer>

@@ -3,28 +3,40 @@
         <div nz-col nzSpan="2">
             <input type="text" nz-input [(ngModel)]="fillterData.orderId" placeholder="订单号" />
         </div>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="2">
             <input type="text" nz-input [(ngModel)]="fillterData.option" placeholder="商品名" />
         </div>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="2">
             <input type="text" nz-input [(ngModel)]="fillterData.origin" placeholder="付款途径" />
         </div>
         <div nz-col nzSpan="3">
             <input type="text" nz-input [(ngModel)]="fillterData.des" placeholder="备注" />
         </div>
-        <div nz-col nzSpan="4">
+        <div nz-col nzSpan="2">
             <nz-select nzAllowClear nzPlaceHolder="相关租赁人" name="origin" class="w100p"
                 [(ngModel)]="fillterData.relativePeople">
-                <nz-option nzValue="" nzLabel="请选择相关租赁人"></nz-option>
+                <nz-option nzValue="" nzLabel="相关租赁人"></nz-option>
                 <nz-option *ngFor="let item of adminList" nzValue="{{item.name}}" nzLabel="{{item.name}}"></nz-option>
             </nz-select>
         </div>
         <div nz-col nzSpan="2">
             <nz-select nzAllowClear nzPlaceHolder="标记" name="flag" class="w100p"
                 [(ngModel)]="fillterData.flag">
-                <nz-option nzValue="" nzLabel="全部"></nz-option>
+                <nz-option nzValue="" nzLabel="全部标记"></nz-option>
                 <nz-option nzValue="1" nzLabel="已标记"></nz-option>
                 <nz-option nzValue="0" nzLabel="未标记"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="2">
+            <nz-select nzAllowClear nzPlaceHolder="状态" name="status" class="w100p"
+                [(ngModel)]="fillterData.status">
+                <nz-option nzValue="" nzLabel="全部状态"></nz-option>
+                <nz-option nzValue="3" nzLabel="租赁中"></nz-option>
+                <nz-option nzValue="4" nzLabel="归还中"></nz-option>
+                <nz-option nzValue="6" nzLabel="运输中"></nz-option>
+                <nz-option nzValue="7" nzLabel="续租中"></nz-option>
+                <nz-option nzValue="8" nzLabel="逾期中"></nz-option>
+                <nz-option nzValue="9" nzLabel="已买断"></nz-option>
             </nz-select>
         </div>
         <div nz-col nzSpan="4">
@@ -38,6 +50,7 @@
     <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
             <th nzWidth="100px" nzShowSort nzSortKey="id" nzLeft="0px">订单ID</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="status">状态</th>
             <th nzWidth="250px" nzShowSort nzSortKey="end">出租时间</th>
             <th nzWidth="100px">天数</th>
             <th nzWidth="100px" nzShowSort nzSortKey="money">租金</th>
@@ -60,6 +73,7 @@
                 <i nz-icon nzType="star" nzTheme="twotone" *ngIf="item.flag_careful === '1'"></i>
                 {{item.id}}
             </td>
+            <td>{{changeOrderstatusText(item.status)}}</td>
             <td>{{item.start}} / {{item.end}}</td>
             <td>{{common.DateDiffNormal(item.start,item.end)}}</td>
             <td>{{item.money}}</td>
@@ -178,6 +192,11 @@
 <nz-modal [(nzVisible)]="displayCompleteColumn" nzTitle="订单完成提示" (nzOnCancel)="displayCompleteColumn = false" [nzOkLoading]="loading"
     (nzOnOk)="completeOrder()">
     <p *ngIf="completeData !== null">确定订单 {{completeData.id}} 已经完成？</p>
+    <p *ngIf="completeData !== null && (completeData.status === '3' || completeData.status === '4') && completeData.store === '微信'">
+        <nz-input-group  class="w230" nzAddOnBefore="押金退还" nzAddOnAfter="元">
+            <input type="number" nz-input [(ngModel)]="completeData.deposit" />
+        </nz-input-group>
+    </p>
 </nz-modal>
 <nz-modal [(nzVisible)]="displayBuyoutColumn" nzTitle="买断商品提示" [nzOkLoading]="loading" (nzOnCancel)="displayBuyoutColumn = false"
     (nzOnOk)="buyOutDevice()">
@@ -245,6 +264,14 @@
             <nz-form-control [nzSm]="12" [nzXs]="24">
                 <nz-input-group nzAddOnAfter="填写客户实际租赁的天数">
                     <input nz-input [(ngModel)]="shiftCompleteOrderData.days" name="days" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24">押金</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <nz-input-group  class="w230" nzAddOnAfter="元">
+                    <input type="number" name="realRefund" nz-input [(ngModel)]="shiftCompleteOrderData.realRefund" />
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>

@@ -15,7 +15,7 @@ export class OrderEditComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2100px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2200px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	storeList = []; // 店铺来源列表
@@ -31,7 +31,8 @@ export class OrderEditComponent implements OnInit {
 		relativePeople: '',
 		completed: 0,
 		sort: null,
-		flag: ''
+		flag: '',
+		status: ''
 	};
 	fillterDataCopy = JSON.parse(JSON.stringify(this.fillterData));
 	departmentList = null; // 部门列表
@@ -67,7 +68,8 @@ export class OrderEditComponent implements OnInit {
 		freightPayer: '0',
 		backRent: '0',
 		days: 0,
-		des: ''
+		des: '',
+		realRefund: 0
 	}
 
 	/***
@@ -341,7 +343,8 @@ export class OrderEditComponent implements OnInit {
 			"modular":"order",
 			"requestname":"orderCompleted",
 			"param":{
-				"id": this.completeData.id
+				"id": this.completeData.id,
+				"realRefund": this.completeData.deposit
 			}
 		}
 		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
@@ -364,6 +367,7 @@ export class OrderEditComponent implements OnInit {
 	shiftCompleteOrderWarning(item) {
 		this.completeData = item;
 		this.displayShiftCompleteColumn = true;
+		this.shiftCompleteOrderData.realRefund = this.completeData.deposit;
 	}
 	shiftCompleteOrder() {
 		this.loading = true;
@@ -490,5 +494,13 @@ export class OrderEditComponent implements OnInit {
 			}
 			this.loading = false;
 		});
+	}
+	// 订单状态显示
+	changeOrderstatusText(type) {
+		for (let i = 0, r = this.common.orderStatus.length; i < r; i++) {
+			if (this.common.orderStatus[i].id === Number(type)) {
+				return this.common.orderStatus[i].name;
+			}
+		}
 	}
 }

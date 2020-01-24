@@ -1,0 +1,47 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="3">
+            <input type="text" nz-input [(ngModel)]="fillterData.orderId" placeholder="订单编号" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="search()">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzLeft="0px" nzShowSort nzSortKey="status">状态</th>
+            <th nzWidth="200px">退款号</th>
+            <th nzWidth="200px">订单编号</th>
+            <th nzWidth="150px" nzShowSort nzSortKey="refund_fee">退款金额</th>
+            <th nzWidth="150px" nzShowSort nzSortKey="total_fee">总金额</th>
+            <th nzWidth="200px" nzShowSort nzSortKey="add_time">添加时间</th>
+            <th nzWidth="200px" nzShowSort nzSortKey="complete_time">退款时间</th>
+            <th nzWidth="100px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td nzLeft="0px">
+                <span [ngClass]="{'c_red': item.status === '0', 'c_green': item.status === '1'}">{{item.status === '0' ? '未退' : '已退'}}</span>
+            </td>
+            <td>{{item.id}}</td>
+            <td>{{item.oid}}</td>
+            <td>{{item.refund_fee}}</td>
+            <td>{{item.total_fee}}</td>
+            <td>{{item.add_time}}</td>
+            <td>{{item.complete_time}}</td>
+            <td nzRight="0px">
+                <a (click)="refundColumn(item)">退款</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-modal [(nzVisible)]="visible" nzTitle="退款提示" (nzOnCancel)="visible = false" [nzOkLoading]="loading"
+    (nzOnOk)="refund()">
+    <p>确定退款 (退款号: {{refundItem.id}}) 的订单吗？</p>
+</nz-modal>

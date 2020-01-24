@@ -1,0 +1,67 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="8">
+            <button class="mr-10" nz-button (click)="open('add')"><i nz-icon nzType="plus-circle" nzTheme="outline"></i> 添加文章</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="isSpinning"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows"
+    (nzPageIndexChange)="searchData()">
+    <thead>
+        <tr>
+            <th nzWidth="60px" nzAlign="left">ID</th>
+            <th nzWidth="300px" nzAlign="left">文章标题</th>
+            <th nzWidth="200px" nzAlign="left">来源</th>
+            <th nzWidth="200px" nzAlign="left">创建时间</th>
+            <th nzWidth="200px" nzAlign="left" nzRight="0px">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.source}}</td>
+            <td>{{item.time}}</td>
+            <td nzRight="0px">
+                <a (click)="edit(item)">修改</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nzType="danger" (click)="delete(item)"><i nz-icon nzType="delete"></i>删除</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
+<nz-drawer
+    [nzClosable]="false"
+    [nzVisible]="addColumnDisplay"
+    [nzWidth]="900"
+    nzTitle="微信小程序站内文章"
+    (nzOnClose)="close()"
+>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>文章标题</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <input nz-input placeholder="请输入文章标题" [(ngModel)]="articleData.title" name="title" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>文章来源</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <input nz-input placeholder="请输入文章来源" [(ngModel)]="articleData.source" name="source" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>文章内容</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <div id="editor"></div>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-control [nzSpan]="14" [nzOffset]="3">
+                <button nz-button nzType="primary" (click)="save()">保存</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-drawer>

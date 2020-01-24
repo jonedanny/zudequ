@@ -13,7 +13,12 @@ body {
 .table-operations {
     margin-bottom: 15px;
 }
-
+.w30p {
+    width: 30%;
+}
+.w70p {
+    width: 70%;
+}
 .w100p {
     width: 100%;
 }
@@ -116,4 +121,9 @@ app-data-overview {
 }
 .ant-progress-line {
     width: 90% !important;
+}
+.edui-editor-body .edui-body-container {
+    max-height: 500px !important;
+    min-height: 300px !important;
+    width: 100% !important;
 }
