@@ -15,7 +15,7 @@ export class OrderEditComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2200px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2450px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	storeList = []; // 店铺来源列表
@@ -334,6 +334,7 @@ export class OrderEditComponent implements OnInit {
 	completeOrderWarning(item) {
 		console.log(item);
 		this.completeData = item;
+		this.shiftCompleteOrderData.realRefund = Math.ceil((this.completeData.deposit - this.completeData.free_deposit) * 100) / 100;
 		this.displayCompleteColumn = true;
 	}
 	completeOrder() {
@@ -344,7 +345,7 @@ export class OrderEditComponent implements OnInit {
 			"requestname":"orderCompleted",
 			"param":{
 				"id": this.completeData.id,
-				"realRefund": this.completeData.deposit
+				"realRefund": this.shiftCompleteOrderData.realRefund
 			}
 		}
 		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
@@ -365,9 +366,10 @@ export class OrderEditComponent implements OnInit {
 	}
 	// 提前完成订单
 	shiftCompleteOrderWarning(item) {
+		console.log(item);
 		this.completeData = item;
 		this.displayShiftCompleteColumn = true;
-		this.shiftCompleteOrderData.realRefund = this.completeData.deposit;
+		this.shiftCompleteOrderData.realRefund = Math.ceil((this.completeData.deposit - this.completeData.free_deposit) * 100) / 100;
 	}
 	shiftCompleteOrder() {
 		this.loading = true;

@@ -61,7 +61,8 @@
             <th nzWidth="100px">所属部门</th>
             <th nzWidth="100px">订单来源</th>
             <th nzWidth="100px">操作员</th>
-            <th nzWidth="250px">备注</th>
+            <th nzWidth="250px">下单备注</th>
+            <th nzWidth="250px">归还备注</th>
             <th nzWidth="200px">创建时间</th>
             <th nzWidth="250px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
@@ -104,6 +105,7 @@
             <td>{{item.store}}</td>
             <td>{{item.opteration}}</td>
             <td>{{item.des}}</td>
+            <td>{{item.user_back_des}}</td>
             <td>{{item.addTime}}</td>
             <td nzRight="0px">
                 <a (click)="printOrder(item)">打印</a>
@@ -194,8 +196,9 @@
     <p *ngIf="completeData !== null">确定订单 {{completeData.id}} 已经完成？</p>
     <p *ngIf="completeData !== null && (completeData.status === '3' || completeData.status === '4') && completeData.store === '微信'">
         <nz-input-group  class="w230" nzAddOnBefore="押金退还" nzAddOnAfter="元">
-            <input type="number" nz-input [(ngModel)]="completeData.deposit" />
+            <input type="number" nz-input [(ngModel)]="shiftCompleteOrderData.realRefund" />
         </nz-input-group>
+        <span *ngIf="completeData" class="ml-20 lh-40">免押：{{completeData.free_deposit}}</span>
     </p>
 </nz-modal>
 <nz-modal [(nzVisible)]="displayBuyoutColumn" nzTitle="买断商品提示" [nzOkLoading]="loading" (nzOnCancel)="displayBuyoutColumn = false"
@@ -270,9 +273,10 @@
         <nz-form-item>
             <nz-form-label [nzSm]="3" [nzXs]="24">押金</nz-form-label>
             <nz-form-control [nzSm]="21" [nzXs]="24">
-                <nz-input-group  class="w230" nzAddOnAfter="元">
+                <nz-input-group  class="w160" nzAddOnAfter="元">
                     <input type="number" name="realRefund" nz-input [(ngModel)]="shiftCompleteOrderData.realRefund" />
                 </nz-input-group>
+                <span *ngIf="completeData" class="ml-20">免押：{{completeData.free_deposit}}</span>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

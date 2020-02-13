@@ -57,9 +57,17 @@
         </div>
         <div nz-col [nzSpan]="12">
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">天数</nz-form-label>
+                <nz-form-label [nzSpan]="6">途中</nz-form-label>
                 <nz-form-control [nzSpan]="18">
                     <nz-input-number [(ngModel)]="deviceSellInfo.productDays" name="productDays" class="100p"></nz-input-number> 天
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6">起租</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                    <nz-input-number [(ngModel)]="deviceSellInfo.rentDays" name="rentDays" class="100p"></nz-input-number> 天
                 </nz-form-control>
             </nz-form-item>
         </div>
@@ -71,10 +79,10 @@
                 </nz-form-control>
             </nz-form-item>
         </div>
-        <div nz-col [nzSpan]="12">
+        <div nz-col [nzSpan]="24">
             <nz-form-item>
-                <nz-form-label [nzSpan]="6">备注</nz-form-label>
-                <nz-form-control [nzSpan]="18">
+                <nz-form-label [nzSpan]="3">备注</nz-form-label>
+                <nz-form-control [nzSpan]="9">
                     <input nz-input [(ngModel)]="deviceSellInfo.des" name="des" class="100p" />
                 </nz-form-control>
             </nz-form-item>

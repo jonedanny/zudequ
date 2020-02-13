@@ -68,4 +68,12 @@ export class OrderRealRefundComponent implements OnInit {
 			this.visible = false;
 		});
 	}
+	// 支付状态转换文字
+	orderPayStatusChangeText(status) {
+		for (let i = 0, r = this.common.orderPayStatus.length; i < r; i++) {
+			if(this.common.orderPayStatus[i].id === Number(status)) {
+				return this.common.orderPayStatus[i].name;
+			}
+		}
+	}
 }

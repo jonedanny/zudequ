@@ -37,7 +37,7 @@
             <th nzWidth="100px">操作员</th>
             <th nzWidth="250px">备注</th>
             <th nzWidth="200px">创建时间</th>
-            <th nzWidth="150px" nzAlign="left" nzRight="0px">操作</th>
+            <th nzWidth="200px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
     </thead>
     <tbody>
@@ -100,7 +100,9 @@
             <td>{{item.addTime}}</td>
             <td nzRight="0px">
                 <a *ngIf="item.status === '2'" (click)="fitOut(item)">开始装配</a>
-                <a *ngIf="item.status === '1'">删除</a>
+                <nz-divider nzType="vertical" *ngIf="item.status === '2'"></nz-divider>
+                <a *ngIf="item.status === '2'" (click)="cancelOrderWarning(item)">取消订单</a>
+                <a *ngIf="item.status === '1'" (click)="deleteOrder(item.id)">删除</a>
             </td>
         </tr>
     </tbody>
@@ -133,3 +135,12 @@
         <i nz-icon nzType="thunderbolt" nzTheme="outline"></i>发货
     </button>
 </nz-drawer>
+<nz-modal
+    [(nzVisible)]="orderCancelVisible"
+    nzTitle="订单取消提示"
+    (nzOnCancel)="orderCancelVisible = false"
+    (nzOnOk)="cancelOrder()"
+    [nzOkLoading]="loading"
+>
+      <p *ngIf="orderCancelVisible">确定要取消订单 {{currentOrder.id}} ?</p>
+</nz-modal>

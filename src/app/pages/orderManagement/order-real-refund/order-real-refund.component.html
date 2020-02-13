@@ -26,7 +26,7 @@
     <tbody>
         <tr *ngFor="let item of result">
             <td nzLeft="0px">
-                <span [ngClass]="{'c_red': item.status === '0', 'c_green': item.status === '1'}">{{item.status === '0' ? '未退' : '已退'}}</span>
+                <span [ngClass]="{'c_red': item.status === '0', 'c_orange': item.status === '1', 'c_green': item.status === '2'}">{{orderPayStatusChangeText(item.status)}}</span>
             </td>
             <td>{{item.id}}</td>
             <td>{{item.oid}}</td>
@@ -35,7 +35,7 @@
             <td>{{item.add_time}}</td>
             <td>{{item.complete_time}}</td>
             <td nzRight="0px">
-                <a (click)="refundColumn(item)">退款</a>
+                <a *ngIf="item.status === '0'" (click)="refundColumn(item)">退款</a>
             </td>
         </tr>
     </tbody>

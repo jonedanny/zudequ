@@ -52,6 +52,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 		productRent: null,
 		productDeposit: null,
 		productDays: null,
+		rentDays: null,
 		productCapacity: null,
 		des: null
 	};
@@ -125,6 +126,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 		this.deviceSellInfo.productRent = event.node.origin.product_rent || '';
 		this.deviceSellInfo.productDeposit = event.node.origin.product_deposit || '';
 		this.deviceSellInfo.productDays = event.node.origin.product_days || '';
+		this.deviceSellInfo.rentDays = event.node.origin.rent_days || '';
 		this.deviceSellInfo.productCapacity = event.node.origin.product_capacity || '';
 		this.deviceSellInfo.des = event.node.origin.product_remark || '';
 		this.avatarUrl = event.node.origin.img || '';
@@ -189,6 +191,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 				"productPrice": Number(this.deviceSellInfo.productPrice) || 0,   // 当前买断价格  必传
 				"productDeposit": Number(this.deviceSellInfo.productDeposit) || 0,  // --押金  必传
 				"productDays": Number(this.deviceSellInfo.productDays) || 0,   // --设备准备天数  必传
+				"rentDays": Number(this.deviceSellInfo.rentDays) || 7,   // --起租天数  必传
 				"productCapacity": Number(this.deviceSellInfo.productCapacity) || 0,  // -设备容量
 				"productRemark": this.deviceSellInfo.des  // 备注
 			}

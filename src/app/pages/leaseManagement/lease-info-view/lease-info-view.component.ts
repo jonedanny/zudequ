@@ -16,7 +16,7 @@ export class LeaseInfoViewComponent implements OnInit {
 		private Requset: RequsetService
 	) { }
 	
-	tableScroll = {y: `${document.body.clientHeight - 350}px`, x: '1830px'};
+	tableScroll = {y: `${document.body.clientHeight - 350}px`, x: '2100px'};
 	dateFormat = 'yyyy/MM/dd';
 	result = []; // 查询结果
 	adminList; // 管理员列表
@@ -34,6 +34,7 @@ export class LeaseInfoViewComponent implements OnInit {
 	};
 	currentPayData = null;
 	visible = false;
+	errorDesVisible = false;
 	payData = {
 		id: null,
 		lease_day: 0,
@@ -46,6 +47,7 @@ export class LeaseInfoViewComponent implements OnInit {
 	payDataCopy = JSON.parse(JSON.stringify(this.payData));
 	deviceLeaseMoney = 0;
 	estimateMoney = 0; // 系统估计的租金
+	errorOrderDes = ''; // 异常备注
 	ngOnInit() {
 		this.common.initData(() => {
 			this.adminList = this.common.adminList;
@@ -96,6 +98,25 @@ export class LeaseInfoViewComponent implements OnInit {
 		// 	this.deviceLeaseMoney = res.content[0].out_price;
 		// 	this.estimateMoney = Number(this.deviceLeaseMoney) * Number(this.payData.lease_day);
 		// });
+	}
+	// 异常订单备注
+	errorDes(item) {
+		this.currentPayData = item;
+		this.errorDesVisible = true;
+	}
+	submitErrorDes() {
+		this.loading = true;
+		var data = {
+			errorOrderDes: this.errorOrderDes,
+			id: this.currentPayData.id
+		};
+		this.Requset.post$('devicemanager/updateErrorDes',data).subscribe(() => {
+			this.message.success('备注成功');
+			this.searchData();
+			this.loading = false;
+			this.errorDesVisible = false;
+			this.errorOrderDes = '';
+		});
 	}
 	// 租金更改
 	changeMoney() {

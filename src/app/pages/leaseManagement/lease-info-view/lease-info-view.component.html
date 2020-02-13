@@ -36,8 +36,9 @@
             <th nzWidth="150px" nzAlign="left" nzShowSort nzSortKey="lease_day">租赁天数</th>
             <th nzWidth="100px" nzAlign="left">其他费用</th>
             <th nzWidth="150px" nzAlign="left">备注</th>
+            <th nzWidth="200px" nzAlign="left">订单异常备注</th>
             <th nzWidth="250px" nzAlign="left">创建时间</th>
-            <th nzWidth="200px" nzAlign="left" nzShowSort nzSortKey="pay_time" nzRight="0px">操作</th>
+            <th nzWidth="270px" nzAlign="left" nzShowSort nzSortKey="pay_time" nzRight="0px">操作</th>
         </tr>
     </thead>
     <tbody>
@@ -53,10 +54,13 @@
             <td>{{item.lease_day}}</td>
             <td>{{item.other_price}}</td>
             <td>{{item.des}}</td>
+            <td>{{item.error_des}}</td>
             <td>{{item.creat_time}}</td>
             <td nzRight="0px">
+                <a (click)="errorDes(item)">备注</a>
+                <nz-divider nzType="vertical"></nz-divider>
                 <a *ngIf="item.is_pay === '0'" (click)="payRentDisplay(item)">付款</a>
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                <nz-divider *ngIf="item.is_pay === '0'" nzType="vertical"></nz-divider>
                 <span *ngIf="item.days > 15 && item.is_pay === '0'" class="c_red">逾期: {{item.days}}天</span>
                 <span *ngIf="item.days <= 15 && item.is_pay === '0'" class="c_orange">逾期: {{item.days}}天</span>
                 <span *ngIf="item.is_pay !== '0'">{{item.pay_time}}</span>
@@ -112,3 +116,6 @@
         <i nz-icon nzType="pay-circle" nzTheme="outline"></i>付款
     </button>
 </nz-drawer>
+<nz-modal [(nzVisible)]="errorDesVisible" nzTitle="订单异常备注" (nzOnCancel)="errorDesVisible = false" (nzOnOk)="submitErrorDes()">
+    <p><textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 6 }" [(ngModel)]="errorOrderDes" class="w100p" placeholder="请填写订单异常备注..."></textarea></p>
+</nz-modal>

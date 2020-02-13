@@ -1,0 +1,30 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input placeholder="请输入用户名" [(ngModel)]="fillterData.phone" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="searchData()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzAlign="left">ID</th>
+            <th nzWidth="200px" nzAlign="left">用户名</th>
+            <th nzWidth="1000px" nzAlign="left">反馈问题</th>
+            <th nzWidth="200px" nzAlign="left">反馈时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.qsFk}}</td>
+            <td>{{item.addTime}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>

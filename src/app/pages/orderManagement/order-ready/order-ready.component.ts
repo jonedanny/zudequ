@@ -15,7 +15,7 @@ export class OrderReadyComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2250px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2300px' };
 
 	result = []; // 查询结果
 	adminList; // 管理员列表
@@ -38,6 +38,7 @@ export class OrderReadyComponent implements OnInit {
 	visible: boolean = false; // 装配框显示
 	fitOutList: any = []; // 装配列表
 	currentOrder: any = null;
+	orderCancelVisible: boolean = false; // 取消订单框显示
 
 	ngOnInit() {
 		this.common.initData(() => {
@@ -126,7 +127,6 @@ export class OrderReadyComponent implements OnInit {
 	}
 	// 发货
 	outItem() {
-		console.log(this.currentOrder);
 		this.loading = true;
 		const data = {
 			"version":"1.0",
@@ -140,6 +140,37 @@ export class OrderReadyComponent implements OnInit {
 			this.loading = false;
 			this.visible = false;
 			this.message.success('发货成功');
+			this.search();
+		});
+	}
+	// 删除订单
+	deleteOrder(id) {
+		this.loading = true;
+		this.Requset.post$('ordermanager/orderReadyDelete', {id: id}).subscribe(res => {
+			this.message.success('删除成功');
+			this.loading = false;
+			this.search();
+		});
+	}
+	// 取消订单
+	cancelOrderWarning(item) {
+		this.currentOrder = item;
+		this.orderCancelVisible = true;
+	}
+	cancelOrder() {
+		this.loading = true;
+		const data = {
+			"version":"1.0",
+			"modular":"refund",
+			"requestname":"refundOrder",
+			"param": {
+				"oid": this.currentOrder.id // 订单ID必传
+			}
+		}
+		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
+			this.loading = false;
+			this.orderCancelVisible = false;
+			this.message.success('取消成功');
 			this.search();
 		});
 	}

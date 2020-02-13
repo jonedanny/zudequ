@@ -86,6 +86,11 @@
                 "name": "商品查询",
                 "selected": false,
                 "url": "ProductSearch"
+            },
+            {
+                "name": "买断商品查询",
+                "selected": false,
+                "url": "ProductSold"
             }
         ]
     },
@@ -180,7 +185,17 @@
             {
                 "name": "文章管理",
                 "selected": false,
-                "url": "WechatArticleManagementComponent"
+                "url": "WechatArticleManagement"
+            },
+            {
+                "name": "意见反馈管理",
+                "selected": false,
+                "url": "WechatFeedbackManagement"
+            },
+            {
+                "name": "公告通知管理",
+                "selected": false,
+                "url": "WechatNoticeManagement"
             }
         ]
     }

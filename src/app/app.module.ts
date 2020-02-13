@@ -23,6 +23,7 @@ import { DataOverviewComponent } from './pages/data-overview/data-overview.compo
 import { ProductClassifyManagementComponent } from './pages/productManagement/product-classify-management/product-classify-management.component';
 import { ProductAddComponent } from './pages/productManagement/product-add/product-add.component';
 import { ProductSearchComponent } from './pages/productManagement/product-search/product-search.component';
+import { ProductSoldComponent } from './pages/productManagement/product-sold/product-sold.component';
 
 import { OrderCreatComponent } from './pages/orderManagement/order-creat/order-creat.component';
 import { OrderEditComponent } from './pages/orderManagement/order-edit/order-edit.component';
@@ -53,6 +54,9 @@ import { GameCustomerChooseComponent } from './pages/gameManager/game-customer-c
 
 import { WechatActiveManagementComponent } from './pages/wechat/wechat-active-management/wechat-active-management.component';
 import { WechatArticleManagementComponent } from './pages/wechat/wechat-article-management/wechat-article-management.component';
+import { WechatFeedbackManagementComponent } from './pages/wechat/wechat-feedback-management/wechat-feedback-management.component';
+import { WechatNoticeManagementComponent } from './pages/wechat/wechat-notice-management/wechat-notice-management.component';
+
 
 
 
@@ -88,7 +92,10 @@ registerLocaleData(zh);
 		GameCustomerChooseComponent,
 		OrderReadyComponent,
 		WechatArticleManagementComponent,
-		OrderRealRefundComponent
+		OrderRealRefundComponent,
+		WechatFeedbackManagementComponent,
+		WechatNoticeManagementComponent,
+		ProductSoldComponent
 	],
 	imports: [
 		BrowserModule,

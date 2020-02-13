@@ -255,6 +255,16 @@ export class CommonDataService {
 		{ id: 9, name: '已买断' }
 	];
 
+	/**
+	 * 订单支付状态
+	 * (0:未退 1:退款中 2:已退款)
+	 */
+	orderPayStatus = [
+		{ id: 0, name: '未退' },
+		{ id: 1, name: '退款中' },
+		{ id: 2, name: '已退款' }
+	];
+
 	//计算天数差的函数，通用  
 	DateDiff(sDate) {    //sDate1和sDate2是xxxx-xx-xx格式  
 		const d1 = new Date(sDate.replace(/\-/g, '/'));

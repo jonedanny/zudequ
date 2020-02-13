@@ -1,0 +1,47 @@
+<div class="table-operations">
+    <nz-input-group>
+        <div nz-col nzSpan="4">
+            <input type="text" nz-input placeholder="请输入用户名" [(ngModel)]="fillterData.phone" />
+        </div>
+        <div nz-col nzSpan="4">
+            <button nz-button nzType="primary" (click)="searchData()"><i nz-icon nzType="search"></i>搜索</button>
+        </div>
+    </nz-input-group>
+</div>
+<nz-table [nzData]="result" [nzScroll]="tableScroll" #headerTable [nzFrontPagination]="false" [nzLoading]="loading"
+    [nzTotal]="total" [nzShowTotal]="totalTemplate" [(nzPageIndex)]="fillterData.page" [(nzPageSize)]="fillterData.rows">
+    <thead>
+        <tr>
+            <th nzWidth="100px" nzAlign="left">ID</th>
+            <th nzWidth="100px" nzShowSort nzSortKey="status">状态</th>
+            <th nzWidth="200px" nzAlign="left">用户名</th>
+            <th nzWidth="100px" nzAlign="left">订单ID</th>
+            <th nzWidth="100px" nzAlign="left">设备ID</th>
+            <th nzWidth="200px" nzAlign="left">买断设备名称</th>
+            <th nzWidth="100px" nzAlign="left">买断价格</th>
+            <th nzWidth="200px" nzAlign="left">买断时间</th>
+            <th nzWidth="200px" nzAlign="left">买断订单明细ID</th>
+            <th nzWidth="200px" nzAlign="left">买断流水号</th>
+            <th nzWidth="200px" nzAlign="left">备注说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of result">
+            <td>{{item.id}}</td>
+            <td>
+                <i nz-icon nzType="money-collect" nzTheme="twotone" *ngIf="item.pay_status === '1'" class="is-pay"></i>
+                <i nz-icon nzType="money-collect" nzTheme="outline" *ngIf="item.pay_status === '2'" class="un-pay"></i>
+            </td>
+            <td>{{item.phone}}</td>
+            <td>{{item.cid}}</td>
+            <td>{{item.p_id}}</td>
+            <td>{{item.p_name}}</td>
+            <td>{{item.price}}</td>
+            <td>{{item.add_time}}</td>
+            <td>{{item.cdid}}</td>
+            <td>{{item.out_trade_no}}</td>
+            <td>{{item.des}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #totalTemplate let-total> 共 {{ total }} 个结果 </ng-template>
