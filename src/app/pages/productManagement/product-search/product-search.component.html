@@ -13,14 +13,21 @@
                 <nz-option nzValue="1" nzLabel="租赁中"></nz-option>
             </nz-select>
         </div>
-        <div nz-col nzSpan="3">
+        <div nz-col nzSpan="2">
             <nz-select [(ngModel)]="fillterData.origin" class="w100p" nzPlaceHolder="请选择租赁人" nzAllowClear>
                 <nz-option *ngFor="let item of common.adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}">
                 </nz-option>
             </nz-select>
         </div>
-        <div nz-col nzSpan="4">
+        <div nz-col nzSpan="3">
             <input type="text" nz-input [(ngModel)]="fillterData.price" placeholder="请输入设备价格 条件 '<='" />
+        </div>
+        <div nz-col nzSpan="4" *ngIf="this.classifyOutputData.length > 0">
+            <nz-cascader nzChangeOnSelect [nzOptions]="classifyOutputData" class="w100p" nzPlaceHolder="请选择分类"
+                (nzSelectionChange)="changeClassifyBlock($event)"
+                [(ngModel)]="classifyValues" (ngModelChange)="clearClassify()"
+                name="classify">
+            </nz-cascader>
         </div>
         <div nz-col nzSpan="4">
             <button nz-button nzType="primary" (click)="search()"><i nz-icon nzType="search"></i>搜索</button>
@@ -133,8 +140,8 @@
                 <nz-option *ngFor="let item of common.adminList" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
             </nz-select>
         </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="设备价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.price" nzSize="small"></nz-input-number></nz-descriptions-item>
-        <nz-descriptions-item nzTitle="租赁价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.out_price" nzSize="small"></nz-input-number></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="设备价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.price"></nz-input-number></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="租赁价格" [nzSpan]="1"><nz-input-number class="w120" [(ngModel)]="selectData.out_price"></nz-input-number></nz-descriptions-item>
         <nz-descriptions-item nzTitle="产生收益" [nzSpan]="1">{{selectData.profit}}</nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>

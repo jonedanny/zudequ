@@ -131,6 +131,17 @@
             </span>
         </div>
     </div>
+    <div class="flex-between fit-out">
+        <nz-descriptions [nzColumn]="2">
+            <nz-descriptions-item nzTitle="物流单号" [nzSpan]="2">
+                <input nz-input [(ngModel)]="currentOrder.dispatchId" />
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="订单备注" [nzSpan]="2">
+                <textarea nz-input [(ngModel)]="orderDes" [nzAutosize]="{ minRows: 3, maxRows: 6 }" class="w300"></textarea>
+                <div class="mt-10"><button nz-button [nzLoading]="loading" (click)="addOrderDes()">添加备注</button></div>
+            </nz-descriptions-item>
+        </nz-descriptions>
+    </div>
     <button nz-button nzType="primary" [nzLoading]="loading" (click)="outItem()">
         <i nz-icon nzType="thunderbolt" nzTheme="outline"></i>发货
     </button>

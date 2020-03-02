@@ -32,6 +32,7 @@ export class ProductAddComponent implements OnInit {
 		classify_c: '',
 		price: '',
 		out_price: '',
+		product_price: '',
 		origin: null,
 		classifyValues: null
 	};
@@ -96,15 +97,18 @@ export class ProductAddComponent implements OnInit {
 		if(values.length === 1) {
 			this.chooseInfo.classify_a = values[0].id;
 			this.chooseInfo.out_price = values[0].product_rent || 0;
+			this.chooseInfo.product_price = values[0].product_price || 0;
 		} else if (values.length === 2) {
 			this.chooseInfo.classify_a = values[0].id;
 			this.chooseInfo.classify_b = values[1].id;
 			this.chooseInfo.out_price = values[1].product_rent || 0;
+			this.chooseInfo.product_price = values[1].product_price || 0;
 		} else if (values.length === 3) {
 			this.chooseInfo.classify_a = values[0].id;
 			this.chooseInfo.classify_b = values[1].id;
 			this.chooseInfo.classify_c = values[2].id;
 			this.chooseInfo.out_price = values[2].product_rent || 0;
+			this.chooseInfo.product_price = values[2].product_price || 0;
 		}
 	}
 	// 数据提交

@@ -48,6 +48,10 @@ export class LeaseInfoViewComponent implements OnInit {
 	deviceLeaseMoney = 0;
 	estimateMoney = 0; // 系统估计的租金
 	errorOrderDes = ''; // 异常备注
+	recovery:boolean = false; // 设备是否已收回本金
+	recoveryLoading:boolean = false;
+	currentRecovery:any = null;
+
 	ngOnInit() {
 		this.common.initData(() => {
 			this.adminList = this.common.adminList;
@@ -87,17 +91,25 @@ export class LeaseInfoViewComponent implements OnInit {
 		this.payData.lease_end = item.lease_end;
 		this.estimateMoney = item.lease_price;
 		this.visible = true;
-		// this.loading = true;
-		// // 查询设备租金
-		// this.Requset.post$('ordermanager/searchDeviceForId', {
-		// 	id: item.device_id
-		// }).subscribe(res => {
-		// 	console.log(res);
-		// 	this.loading = false;
-		// 	this.visible = true;
-		// 	this.deviceLeaseMoney = res.content[0].out_price;
-		// 	this.estimateMoney = Number(this.deviceLeaseMoney) * Number(this.payData.lease_day);
-		// });
+		this.recoveryLoading = true;
+		this.currentRecovery = null;
+		// 查询设备租金
+		this.Requset.post$('devicemanager/searchDevice', {
+			id: item.device_id,
+			rows: 1,
+			page: 1,
+			name: "",
+			des: "",
+			origin:null,
+			price: "",
+			status: "-1"
+		}).subscribe(res => {
+			console.log(res);
+			const data = res.content[0];
+			this.currentRecovery = data;
+			this.recovery = Number(data.ljsy) >= Number(data.price) ? true : false;
+			this.recoveryLoading = false;
+		});
 	}
 	// 异常订单备注
 	errorDes(item) {

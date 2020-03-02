@@ -29,8 +29,8 @@
         <tr *ngFor="let item of result">
             <td>{{item.id}}</td>
             <td>
-                <i nz-icon nzType="money-collect" nzTheme="twotone" *ngIf="item.pay_status === '1'" class="is-pay"></i>
-                <i nz-icon nzType="money-collect" nzTheme="outline" *ngIf="item.pay_status === '2'" class="un-pay"></i>
+                <i nz-icon nzType="money-collect" nzTheme="twotone" *ngIf="item.pay_status === '2'" class="is-pay"></i>
+                <i nz-icon nzType="money-collect" nzTheme="outline" *ngIf="item.pay_status === '1'" class="un-pay"></i>
             </td>
             <td>{{item.phone}}</td>
             <td>{{item.cid}}</td>

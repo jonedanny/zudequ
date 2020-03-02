@@ -60,8 +60,10 @@
             <th nzWidth="100px">订单项目</th>
             <th nzWidth="100px">所属部门</th>
             <th nzWidth="100px">订单来源</th>
+            <th nzWidth="200px">发货物流号</th>
             <th nzWidth="100px">操作员</th>
-            <th nzWidth="250px">下单备注</th>
+            <th nzWidth="250px">客户下单备注</th>
+            <th nzWidth="450px">订单备注</th>
             <th nzWidth="250px">归还备注</th>
             <th nzWidth="200px">创建时间</th>
             <th nzWidth="250px" nzAlign="left" nzRight="0px">操作</th>
@@ -103,8 +105,15 @@
             </td>
             <td>{{__departmentText(item.department)}}</td>
             <td>{{item.store}}</td>
+            <td>{{item.dispatch_id}}</td>
             <td>{{item.opteration}}</td>
             <td>{{item.des}}</td>
+            <td>
+                <div class="user-des" *ngFor="let des of item.userDes">
+                    <b>{{des.user}}: </b>
+                    <span>{{des.content}}</span>
+                </div>
+            </td>
             <td>{{item.user_back_des}}</td>
             <td>{{item.addTime}}</td>
             <td nzRight="0px">
@@ -179,8 +188,8 @@
             </div>
         </nz-descriptions-item>
         <nz-descriptions-item nzTitle="订单备注" [nzSpan]="1">
-            <textarea nz-input [(ngModel)]="editData.des" [nzAutosize]="{ minRows: 4, maxRows: 6 }"
-                class="w410"></textarea>
+            <textarea nz-input [(ngModel)]="orderDes" [nzAutosize]="{ minRows: 4, maxRows: 6 }" class="w410"></textarea>
+            <div class="mt-10"><button nz-button [nzLoading]="loading" (click)="addOrderDes()">添加备注</button></div>
         </nz-descriptions-item>
     </nz-descriptions>
     <nz-divider></nz-divider>

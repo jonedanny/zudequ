@@ -15,7 +15,7 @@ export class OrderFinishSearchComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '1700px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2350px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	loading = true;
@@ -57,8 +57,22 @@ export class OrderFinishSearchComponent implements OnInit {
 		this.loading = true;
 		this.Requset.post$('ordermanager/searchOrderList',this.fillterData).subscribe(res => {
 			if(res) {
+				// 组合多条备注数据
+				for(let i = 0, r = res.content.length; i < r; i++) {
+					if(res.content[i].content && res.content[i].user_name) {
+						let tmpArr = [], tmpUserNameArr = res.content[i].user_name.split(','), tmpContentArr = res.content[i].content.split(',');
+						tmpUserNameArr.forEach((x,y) => {
+							tmpArr.push({
+								user: tmpUserNameArr[y],
+								content: tmpContentArr[y]
+							});
+						});
+						res.content[i].userDes = tmpArr;
+					}
+				}
 				this.result = res.content;
 				this.total = res.total;
+				console.log(this.result);
 			}
 			this.loading = false;
 		});

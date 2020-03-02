@@ -133,3 +133,7 @@ app-data-overview {
     min-height: 300px !important;
     width: 100% !important;
 }
+.ant-descriptions-item-label,
+.ant-descriptions-item-content {
+    line-height: 2 !important;
+}

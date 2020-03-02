@@ -79,6 +79,8 @@ export class ProductClassifyManagementComponent implements OnInit {
 				this.common.productClassify.a[i].expanded = false;
 				this.classifyOutputData.push(this.common.productClassify.a[i]);
 			}
+			// 根据中文排序
+			this.classifyOutputData.sort((a,b) => a.name.localeCompare(b.name, 'zh'));
 			// 保存二级分类
 			for (let i = 0, r = this.classifyOutputData.length; i < r; i++) {
 				for (let s = 0, k = this.common.productClassify.b.length; s < k; s++) {
@@ -89,6 +91,10 @@ export class ProductClassifyManagementComponent implements OnInit {
 						this.common.productClassify.b[s].expanded = false;
 						this.classifyOutputData[i].children.push(this.common.productClassify.b[s]);
 					}
+				}
+				// 根据中文排序
+				if(this.classifyOutputData[i].children.length > 0) {
+					this.classifyOutputData[i].children.sort((a,b) => a.name.localeCompare(b.name, 'zh'));
 				}
 			}
 			// 保存三级分类
@@ -105,8 +111,13 @@ export class ProductClassifyManagementComponent implements OnInit {
 							this.classifyOutputData[i].children[s].children.push(this.common.productClassify.c[x]);
 						}
 					}
+					// 根据中文排序
+					if(this.classifyOutputData[i].children[s].children.length > 0) {
+						this.classifyOutputData[i].children[s].children.sort((a,b) => a.name.localeCompare(b.name, 'zh'));
+					}
 				}
 			}
+
 			console.log(this.classifyOutputData);
 			this.isSpinning = false;
 		});
@@ -198,13 +209,12 @@ export class ProductClassifyManagementComponent implements OnInit {
 		}
 		this.isSpinning = true;
 		this.Requset.post$('javacontact/javaContact', { data: JSON.stringify(data) }).subscribe(res => {
-			if (res.success) {
+			if (res) {
 				this.message.success('修改分类设备价格与租金成功');
 				this.deviceSellInfo = JSON.parse(JSON.stringify(this.deviceSellInfoCopy));
 			}
 			this.isSpinning = false;
 			this.close();
-			this.refreshClassify();
 		});
 	}
 	// 添加顶级分类
@@ -218,7 +228,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 			if (!res) return;
 			this.message.success('添加成功');
 			this.modalData = JSON.parse(JSON.stringify(this.modalDataCopy));
-			this.refreshClassify();
 			this.isSpinning = false;
 			this.modalDisplay = false;
 		});
@@ -240,7 +249,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 				if (!res) return;
 				this.message.success('添加成功');
 				this.subClassifuName = '';
-				this.refreshClassify();
 				this.isSpinning = false;
 			});
 		} else if (this.classifyEditData.level === 1) {
@@ -254,7 +262,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 				if (!res) return;
 				this.message.success('添加成功');
 				this.subClassifuName = '';
-				this.refreshClassify();
 				this.isSpinning = false;
 			});
 		}
@@ -271,7 +278,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 		this.Requset.post$('productmanager/modifyName', data).subscribe(res => {
 			if (res) {
 				this.message.success('修改成功');
-				this.refreshClassify();
 			}
 
 		});
@@ -288,6 +294,7 @@ export class ProductClassifyManagementComponent implements OnInit {
 			if (!res) return;
 			if (res.content.length > 0) {
 				this.message.error(`该分类下有${res.content.length}个商品,请删除商品后再尝试`);
+				this.isSpinning = false;
 				return;
 			}
 			this.isSpinning = false;
@@ -295,7 +302,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 				this.isSpinning = true;
 				this.Requset.post$('productmanager/deleteClassify', data).subscribe(res => {
 					this.message.success('删除成功');
-					this.refreshClassify();
 					this.close();
 					this.isSpinning = false;
 				});
@@ -413,7 +419,6 @@ export class ProductClassifyManagementComponent implements OnInit {
 					this.isSpinning = false;
 				});
 			}
-			this.refreshClassify();
 		}, 100);
 	}
 

@@ -72,13 +72,19 @@
 <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" [nzWidth]="550" nzTitle="支付租赁单"
     (nzOnClose)="visible = false">
     <nz-descriptions [nzColumn]="2" *ngIf="currentPayData !== null">
-        <nz-descriptions-item nzTitle="补录单 - ID" [nzSpan]="1">
+        <nz-descriptions-item nzTitle="设备状态" [nzSpan]="2">
+            <span *ngIf="recoveryLoading"><i nz-icon [nzType]="'sync'" [nzSpin]="true"></i> 正在查询 ...</span>
+            <span *ngIf="!recoveryLoading && recovery" class="c_green"><i nz-icon nzType="check-circle" nzTheme="outline"></i> 已回本</span>
+            <span *ngIf="!recoveryLoading && !recovery" class="c_red"><i nz-icon nzType="close-circle" nzTheme="outline"></i> 未回本</span>
+            <span *ngIf="!recoveryLoading && currentRecovery" class="ml-10">{{currentRecovery.ljsy}} / {{currentRecovery.price}} (回收/成本)</span>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="补录单ID" [nzSpan]="1">
             {{currentPayData.id}}
         </nz-descriptions-item>
         <nz-descriptions-item nzTitle="租金/天" [nzSpan]="1">
             {{currentPayData.rent}}
         </nz-descriptions-item>
-        <nz-descriptions-item nzTitle="设备名" [nzSpan]="1">
+        <nz-descriptions-item nzTitle="设备名称" [nzSpan]="1">
             {{currentPayData.device_name}}
         </nz-descriptions-item>
         <nz-descriptions-item nzTitle="设备租金" [nzSpan]="1">

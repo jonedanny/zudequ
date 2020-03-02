@@ -15,7 +15,7 @@ export class OrderEditComponent implements OnInit {
 		private message: NzMessageService,
 		private Requset: RequsetService
 	) { }
-	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '2450px' };
+	tableScroll = { y: `${document.body.clientHeight - 350}px`, x: '3100px' };
 	result = []; // 查询结果
 	adminList; // 管理员列表
 	storeList = []; // 店铺来源列表
@@ -59,6 +59,8 @@ export class OrderEditComponent implements OnInit {
 	orderDetail = []; // 订单明细
 
 	synchronizationTime = 0; // 同步租赁时间 缩短或延迟
+
+	orderDes: string = ''; // 订单备注
 
 	/***
 	 * 提前完成订单的参数
@@ -115,6 +117,19 @@ export class OrderEditComponent implements OnInit {
 		this.loading = true;
 		this.Requset.post$('ordermanager/searchOrderList', this.fillterData).subscribe(res => {
 			if(res) {
+				// 组合多条备注数据
+				for(let i = 0, r = res.content.length; i < r; i++) {
+					if(res.content[i].content && res.content[i].user_name) {
+						let tmpArr = [], tmpUserNameArr = res.content[i].user_name.split(','), tmpContentArr = res.content[i].content.split(',');
+						tmpUserNameArr.forEach((x,y) => {
+							tmpArr.push({
+								user: tmpUserNameArr[y],
+								content: tmpContentArr[y]
+							});
+						});
+						res.content[i].userDes = tmpArr;
+					}
+				}
 				this.result = res.content;
 				this.total = res.total;
 			}
@@ -291,7 +306,7 @@ export class OrderEditComponent implements OnInit {
 				"deposit" : this.editData.deposit,   // 押金  （整数）
 				"origin" : this.editData.origin,    // 承租人
 				"store" : this.editData.store,    // 来源
-				"des" : this.editData.des,      // 说明备注
+				"des" : '',      // 说明备注
 				"phone" : this.editData.phone         // 用户手机 必传
 			}
 		};
@@ -504,5 +519,27 @@ export class OrderEditComponent implements OnInit {
 				return this.common.orderStatus[i].name;
 			}
 		}
+	}
+	// 添加备注
+	addOrderDes() {
+		this.loading = true;
+		const data = {
+			"version":"1.0",
+			"modular":"order",
+			"requestname":"addOrderRemark",
+			"param": {
+				"cid": this.editData.id, // 订单ID必传
+				"content": this.orderDes, // 备注内容
+				"userName": JSON.parse(localStorage.getItem('userLoginInfo')).name, // 备注人员
+			}
+		}
+		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
+			if(res) {
+				this.message.success('添加备注成功');
+				this.orderDes = '';
+				this.search();
+			}
+			this.loading = false;
+		});
 	}
 }

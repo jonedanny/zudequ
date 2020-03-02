@@ -28,7 +28,10 @@ export class ProductSearchComponent implements OnInit {
 		des: '',
 		origin: null,
 		price: '',
-		status: '-1'
+		status: '-1',
+		classify_a: '',
+		classify_b: '',
+		classify_c: ''
 	};
 	departmentList = null; // 部门列表
 	classify = null; // 分类原始数据
@@ -45,7 +48,10 @@ export class ProductSearchComponent implements OnInit {
 
 	deviceFromDisplay = false; // 查询设备所属订单 显示框
 	deviceFromData = null;
-	
+
+	classifyOutputData = []; // 分类输出数据
+	classifyValues = null;
+
 	ngOnInit() {
 		this.common.initData(() => {
 			this.departmentList = this.common.departmentList;
@@ -53,6 +59,7 @@ export class ProductSearchComponent implements OnInit {
 			console.log(this.classify);
 			this.searchData();
 		});
+		this.refreshClassify();
 	}
 	searchData() {
 		this.loading = true;
@@ -78,6 +85,74 @@ export class ProductSearchComponent implements OnInit {
 		this.fillterData.page = 1;
 		this.fillterData.rows = 25;
 		this.searchData();
+	}
+	// 清除分类
+	clearClassify() {
+		if(this.classifyValues.length === 0) {
+			this.fillterData.classify_a = '';
+			this.fillterData.classify_b = '';
+			this.fillterData.classify_c = '';
+		}
+	}
+	// 更改分类
+	changeClassifyBlock(values: any): void {
+		this.fillterData.classify_a = '';
+		this.fillterData.classify_b = '';
+		this.fillterData.classify_c = '';
+		if(values.length === 1) {
+			this.fillterData.classify_a = values[0].id;
+		} else if (values.length === 2) {
+			this.fillterData.classify_a = values[0].id;
+			this.fillterData.classify_b = values[1].id;
+		} else if (values.length === 3) {
+			this.fillterData.classify_a = values[0].id;
+			this.fillterData.classify_b = values[1].id;
+			this.fillterData.classify_c = values[2].id;
+		}
+	}
+	// 刷新分类数据
+	refreshClassify() {
+		this.loading = true;
+		this.classifyOutputData = [];
+		this.common.refreshProductClassify(() => {
+			console.log(this.common.productClassify)
+			// 保存一级分类
+			for (let i = 0, r = this.common.productClassify.a.length; i < r; i++) {
+				this.common.productClassify.a[i].children = [];
+				this.common.productClassify.a[i].label = this.common.productClassify.a[i].name;
+				this.common.productClassify.a[i].value = this.common.productClassify.a[i].id;
+				this.classifyOutputData.push(this.common.productClassify.a[i]);
+			}
+			// 保存二级分类
+			for (let i = 0, r = this.classifyOutputData.length; i < r; i++) {
+				for (let s = 0, k = this.common.productClassify.b.length; s < k; s++) {
+					if (this.common.productClassify.b[s].classify_a_id === this.classifyOutputData[i].id) {
+						this.common.productClassify.b[s].children = [];
+						this.common.productClassify.b[s].label = this.common.productClassify.b[s].name;
+						this.common.productClassify.b[s].value = this.common.productClassify.b[s].id;
+						this.classifyOutputData[i].children.push(this.common.productClassify.b[s]);
+					}
+				}
+			}
+			// 保存三级分类
+			for (let i = 0, r = this.classifyOutputData.length; i < r; i++) {
+				for (let s = 0, k = this.classifyOutputData[i].children.length; s < k; s++) {
+					for (let x = 0, y = this.common.productClassify.c.length; x < y; x++) {
+						if (
+							this.common.productClassify.c[x].classify_a_id === this.classifyOutputData[i].id &&
+							this.common.productClassify.c[x].classify_b_id === this.classifyOutputData[i].children[s].id
+						) {
+							this.common.productClassify.c[x].isLeaf = true;
+							this.common.productClassify.c[x].label = this.common.productClassify.c[x].name;
+							this.common.productClassify.c[x].value = this.common.productClassify.c[x].id;
+							this.classifyOutputData[i].children[s].children.push(this.common.productClassify.c[x]);
+						}
+					}
+				}
+			}
+			console.log(this.classifyOutputData);
+			this.loading = false;
+		});
 	}
 	// 根据设备查找所属订单
 	viewOrder(item) {

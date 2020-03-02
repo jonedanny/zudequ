@@ -37,8 +37,9 @@ export class OrderReadyComponent implements OnInit {
 	customerAddress: any = {}; // 用户地址
 	visible: boolean = false; // 装配框显示
 	fitOutList: any = []; // 装配列表
-	currentOrder: any = null;
+	currentOrder: any = {};
 	orderCancelVisible: boolean = false; // 取消订单框显示
+	orderDes: string = ''; // 订单备注
 
 	ngOnInit() {
 		this.common.initData(() => {
@@ -75,6 +76,7 @@ export class OrderReadyComponent implements OnInit {
 	fitOut(item) {
 		this.loading = true;
 		this.currentOrder = item;
+		this.currentOrder.dispatchId = '';
 		this.Requset.post$('ordermanager/viewOrderDetail', {cid: item.id, viewAll: true}).subscribe(res => {
 			console.log(res);
 			this.visible = true;
@@ -133,14 +135,40 @@ export class OrderReadyComponent implements OnInit {
 			"modular":"order",
 			"requestname":"deliverGoods",
 			"param": {
-				"id": this.currentOrder.id // 订单ID必传
+				"id": this.currentOrder.id, // 订单ID必传
+				"dispatchId": this.currentOrder.dispatchId, // 运单号
+				"opteration": JSON.parse(localStorage.getItem('userLoginInfo')).name, // 装配人员
 			}
 		}
 		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
+			if(res) {
+				this.visible = false;
+				this.message.success('发货成功');
+				this.currentOrder = {};
+				this.search();
+			}
 			this.loading = false;
-			this.visible = false;
-			this.message.success('发货成功');
-			this.search();
+		});
+	}
+	// 添加备注
+	addOrderDes() {
+		this.loading = true;
+		const data = {
+			"version":"1.0",
+			"modular":"order",
+			"requestname":"addOrderRemark",
+			"param": {
+				"cid": this.currentOrder.id, // 订单ID必传
+				"content": this.orderDes, // 备注内容
+				"userName": JSON.parse(localStorage.getItem('userLoginInfo')).name, // 备注人员
+			}
+		}
+		this.Requset.post$('javacontact/javaContact', {data: JSON.stringify(data)}).subscribe(res => {
+			if(res) {
+				this.message.success('添加备注成功');
+				this.orderDes = '';
+			}
+			this.loading = false;
 		});
 	}
 	// 删除订单

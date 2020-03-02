@@ -37,8 +37,10 @@
             <th nzWidth="200px">趣币会员</th>
             <th nzWidth="100px">订单项目</th>
             <th nzWidth="150px">所属部门</th>
+            <th nzWidth="200px">发货物流号</th>
             <th nzWidth="100px">操作员</th>
-            <th nzWidth="250px">备注</th>
+            <th nzWidth="250px">客户下单备注</th>
+            <th nzWidth="450px">订单备注</th>
             <th nzWidth="100px" nzAlign="left" nzRight="0px">操作</th>
         </tr>
     </thead>
@@ -63,14 +65,22 @@
                     <ul nz-menu nzSelectable>
                         <li nz-menu-item *ngIf="orderDetail.length === 0"><nz-spin nzSimple></nz-spin></li>
                         <li nz-menu-item *ngFor="let item of orderDetail">
-                            ID: {{item.pid}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [租金: {{item.rent || '未知'}}] [{{item.userName}}]
+                            <span *ngIf="item.is_sell === '0'">ID: {{item.pid}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [租金: {{item.rent || '未知'}}] [{{item.userName}}]</span>
+                            <span class="c_red" *ngIf="item.is_sell === '1'">ID: {{item.pid}} {{item.p_name}} [{{item.start_time}} / {{item.end_time}}] [租金: {{item.rent || '未知'}}] [{{item.userName}}] [已买断]</span>
                         </li>
                     </ul>
                 </nz-dropdown-menu>
             </td>
             <td>{{__departmentText(item.department)}}</td>
+            <td>{{item.dispatch_id}}</td>
             <td>{{item.opteration}}</td>
             <td>{{item.des}}</td>
+            <td>
+                <div class="user-des" *ngFor="let des of item.userDes">
+                    <b>{{des.user}}: </b>
+                    <span>{{des.content}}</span>
+                </div>
+            </td>
             <td nzRight="0px">
                 <a (click)="printOrder(item)">打印</a>
             </td>
